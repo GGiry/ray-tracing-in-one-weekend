@@ -1,9 +1,10 @@
 use std::fs::File;
 use std::io::Write;
+use std::ops::Neg;
 
 use derivative::Derivative;
 
-#[derive(Derivative)]
+#[derive(Copy, Clone, Derivative)]
 #[derivative(Default)]
 struct Vec3 {
     #[derivative(Default(value = "0.0"))]
@@ -25,6 +26,18 @@ impl Vec3 {
 
     fn z(&self) -> f64 {
         return self.z;
+    }
+}
+
+impl Neg for Vec3 {
+    type Output = Self;
+
+    fn neg(self) -> Self::Output {
+        Self {
+            x: -self.x,
+            y: -self.y,
+            z: -self.z,
+        }
     }
 }
 
@@ -89,6 +102,20 @@ mod tests {
             y: 2.0,
             z: 3.0
         };
+
+        assert_eq!(1.0, vec.x());
+        assert_eq!(2.0, vec.y());
+        assert_eq!(3.0, vec.z());
+    }
+
+    #[test]
+    fn vec3_neg() {
+        let vec = Vec3 {x: 1.0, y: 2.0, z: 3.0 };
+        let vec_neg = -vec;
+
+        assert_eq!(-1.0, vec_neg.x());
+        assert_eq!(-2.0, vec_neg.y());
+        assert_eq!(-3.0, vec_neg.z());
 
         assert_eq!(1.0, vec.x());
         assert_eq!(2.0, vec.y());
