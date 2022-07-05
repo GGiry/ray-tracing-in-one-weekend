@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 file_diff = "1.0.0"
+derivative = "2.2.0"

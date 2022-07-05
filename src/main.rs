@@ -1,6 +1,23 @@
 use std::fs::File;
 use std::io::Write;
 
+use derivative::Derivative;
+
+#[derive(Derivative)]
+#[derivative(Default)]
+struct Vec3 {
+    #[derivative(Default(value = "0.0"))]
+    x: f64,
+    #[derivative(Default(value = "0.0"))]
+    y: f64,
+    #[derivative(Default(value = "0.0"))]
+    z: f64,
+}
+
+impl Vec3 {
+
+}
+
 fn create_gradient(path: &str) {
     let mut file = File::create(path).unwrap();
 
@@ -44,5 +61,14 @@ mod tests {
         let result_path = "result_gradient.ppm";
         create_gradient(result_path);
         assert_eq!(true, diff("expected_gradient.ppm", result_path));
+    }
+
+    #[test]
+    fn vec3_default() {
+        let vec = Vec3::default();
+
+        assert_eq!(0.0, vec.x);
+        assert_eq!(0.0, vec.y);
+        assert_eq!(0.0, vec.z);
     }
 }
