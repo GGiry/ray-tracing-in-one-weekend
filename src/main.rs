@@ -13,6 +13,7 @@ fn create_gradient(path: &str) {
     file.write_all(b"255\n").expect("Unable to write data");
 
     for index_height in (0..image_height).rev() {
+        eprintln!("Scanlines remaining: {index_height}");
         for index_width in 0..image_width {
             let red = index_width as f64 / ((image_width - 1) as f64);
             let green = index_height as f64 / ((image_height - 1) as f64);
@@ -26,6 +27,7 @@ fn create_gradient(path: &str) {
                 .expect("Unable to write data");
         }
     }
+    eprintln!("Done.");
 }
 
 fn main() {
