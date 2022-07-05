@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::io::Write;
-use std::ops::Neg;
+use std::ops::{Index, Neg};
 
 use derivative::Derivative;
 
@@ -37,6 +37,20 @@ impl Neg for Vec3 {
             x: -self.x,
             y: -self.y,
             z: -self.z,
+        }
+    }
+}
+
+impl Index<i32> for Vec3 {
+    type Output = f64;
+
+    fn index(&self, index: i32) -> &Self::Output {
+
+        match index {
+            0 => &self.x,
+            1 => &self.y,
+            2 => &self.z,
+            _ => panic!("{index} is not a valid index"),
         }
     }
 }
@@ -120,5 +134,28 @@ mod tests {
         assert_eq!(1.0, vec.x());
         assert_eq!(2.0, vec.y());
         assert_eq!(3.0, vec.z());
+    }
+
+    #[test]
+    fn vec3_array_access() {
+        let vec = Vec3 {x: 1.0, y: 2.0, z: 3.0 };
+
+        assert_eq!(1.0, vec[0]);
+        assert_eq!(2.0, vec[1]);
+        assert_eq!(3.0, vec[2]);
+    }
+
+    #[test]
+    #[should_panic(expected = "-1 is not a valid index")]
+    fn vec3_array_access_oob() {
+        let vec = Vec3::default();
+        vec[-1];
+    }
+
+    #[test]
+    #[should_panic(expected ="3 is not a valid index")]
+    fn vec3_array_access_oob2() {
+        let vec = Vec3::default();
+        vec[3];
     }
 }
