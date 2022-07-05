@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::io::Write;
-use std::ops::{Index, Neg};
+use std::ops::{AddAssign, Index, Neg};
 
 use derivative::Derivative;
 
@@ -52,6 +52,14 @@ impl Index<i32> for Vec3 {
             2 => &self.z,
             _ => panic!("{index} is not a valid index"),
         }
+    }
+}
+
+impl AddAssign for Vec3 {
+    fn add_assign(&mut self, rhs: Self) {
+        self.x += rhs.x;
+        self.y += rhs.y;
+        self.z += rhs.z;
     }
 }
 
@@ -157,5 +165,17 @@ mod tests {
     fn vec3_array_access_oob2() {
         let vec = Vec3::default();
         vec[3];
+    }
+
+    #[test]
+    fn vec3_add_assign() {
+        let mut vec_a = Vec3 {x: 1.0, y: 2.0, z: 3.0 };
+        let vec_b = Vec3 {x: 4.0, y: 5.0, z: 6.0 };
+
+        vec_a += vec_b;
+
+        assert_eq!(5.0, vec_a.x());
+        assert_eq!(7.0, vec_a.y());
+        assert_eq!(9.0, vec_a.z());
     }
 }
