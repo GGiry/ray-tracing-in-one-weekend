@@ -71,4 +71,17 @@ mod tests {
         assert_eq!(0.0, vec.y);
         assert_eq!(0.0, vec.z);
     }
+
+    #[test]
+    fn vec3_assign() {
+        let vec = Vec3 {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0
+        };
+
+        assert_eq!(1.0, vec.x);
+        assert_eq!(2.0, vec.y);
+        assert_eq!(3.0, vec.z);
+    }
 }
