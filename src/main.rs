@@ -15,7 +15,17 @@ struct Vec3 {
 }
 
 impl Vec3 {
+    fn x(&self) -> f64 {
+        return self.x;
+    }
 
+    fn y(&self) -> f64 {
+        return self.y;
+    }
+
+    fn z(&self) -> f64 {
+        return self.z;
+    }
 }
 
 fn create_gradient(path: &str) {
@@ -67,9 +77,9 @@ mod tests {
     fn vec3_default() {
         let vec = Vec3::default();
 
-        assert_eq!(0.0, vec.x);
-        assert_eq!(0.0, vec.y);
-        assert_eq!(0.0, vec.z);
+        assert_eq!(0.0, vec.x());
+        assert_eq!(0.0, vec.y());
+        assert_eq!(0.0, vec.z());
     }
 
     #[test]
@@ -80,8 +90,8 @@ mod tests {
             z: 3.0
         };
 
-        assert_eq!(1.0, vec.x);
-        assert_eq!(2.0, vec.y);
-        assert_eq!(3.0, vec.z);
+        assert_eq!(1.0, vec.x());
+        assert_eq!(2.0, vec.y());
+        assert_eq!(3.0, vec.z());
     }
 }
