@@ -1,6 +1,6 @@
+use derivative::Derivative;
 use std::fmt::{Display, Formatter};
 use std::ops::{AddAssign, DivAssign, Index, MulAssign, Neg};
-use derivative::Derivative;
 
 #[derive(Copy, Clone, Derivative)]
 #[derivative(Default)]
@@ -106,7 +106,7 @@ mod tests {
         let vec = Vec3 {
             x: 1.0,
             y: 2.0,
-            z: 3.0
+            z: 3.0,
         };
 
         assert_eq!(1.0, vec.x());
@@ -116,7 +116,11 @@ mod tests {
 
     #[test]
     fn vec3_neg() {
-        let vec = Vec3 {x: 1.0, y: 2.0, z: 3.0 };
+        let vec = Vec3 {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0,
+        };
         let vec_neg = -vec;
 
         assert_eq!(-1.0, vec_neg.x());
@@ -130,7 +134,11 @@ mod tests {
 
     #[test]
     fn vec3_array_access() {
-        let vec = Vec3 {x: 1.0, y: 2.0, z: 3.0 };
+        let vec = Vec3 {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0,
+        };
 
         assert_eq!(1.0, vec[0]);
         assert_eq!(2.0, vec[1]);
@@ -146,7 +154,7 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected ="3 is not a valid index")]
+    #[should_panic(expected = "3 is not a valid index")]
     fn vec3_array_access_oob2() {
         let vec = Vec3::default();
 
@@ -155,8 +163,16 @@ mod tests {
 
     #[test]
     fn vec3_add_assign() {
-        let mut vec_a = Vec3 {x: 1.0, y: 2.0, z: 3.0 };
-        let vec_b = Vec3 {x: 4.0, y: 5.0, z: 6.0 };
+        let mut vec_a = Vec3 {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0,
+        };
+        let vec_b = Vec3 {
+            x: 4.0,
+            y: 5.0,
+            z: 6.0,
+        };
 
         vec_a += vec_b;
 
@@ -167,7 +183,11 @@ mod tests {
 
     #[test]
     fn vec3_mul_assign() {
-        let mut vec_a = Vec3 {x: 1.0, y: 2.0, z: 3.0 };
+        let mut vec_a = Vec3 {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0,
+        };
         let operand = 2.0;
 
         vec_a *= operand;
@@ -179,7 +199,11 @@ mod tests {
 
     #[test]
     fn vec3_div_assign() {
-        let mut vec_a = Vec3 {x: 1.0, y: 2.0, z: 3.0 };
+        let mut vec_a = Vec3 {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0,
+        };
         let operand = 2.0;
 
         vec_a /= operand;
@@ -192,8 +216,16 @@ mod tests {
     #[test]
     fn vec3_length_squared() {
         let vec_default = Vec3::default();
-        let vec_ones = Vec3 {x: 1.0, y: 1.0, z: 1.0 };
-        let vec = Vec3 {x: 2.0, y: 3.0, z: 4.0 };
+        let vec_ones = Vec3 {
+            x: 1.0,
+            y: 1.0,
+            z: 1.0,
+        };
+        let vec = Vec3 {
+            x: 2.0,
+            y: 3.0,
+            z: 4.0,
+        };
 
         assert_eq!(0.0, vec_default.length_squared());
         assert_eq!(3.0, vec_ones.length_squared());
@@ -203,8 +235,16 @@ mod tests {
     #[test]
     fn vec3_length() {
         let vec_default = Vec3::default();
-        let vec_ones = Vec3 {x: 1.0, y: 1.0, z: 1.0 };
-        let vec = Vec3 {x: 2.0, y: 3.0, z: 4.0 };
+        let vec_ones = Vec3 {
+            x: 1.0,
+            y: 1.0,
+            z: 1.0,
+        };
+        let vec = Vec3 {
+            x: 2.0,
+            y: 3.0,
+            z: 4.0,
+        };
 
         assert_eq!(0.0_f64.sqrt(), vec_default.length());
         assert_eq!(3.0_f64.sqrt(), vec_ones.length());
@@ -213,8 +253,16 @@ mod tests {
 
     #[test]
     fn vec3_display() {
-        let vec_a = Vec3 {x: 1.0, y: 2.0, z: 3.0 };
-        let vec_b = Vec3 {x: 0.5, y: 1.9, z: 10.99 };
+        let vec_a = Vec3 {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0,
+        };
+        let vec_b = Vec3 {
+            x: 0.5,
+            y: 1.9,
+            z: 10.99,
+        };
 
         assert_eq!(format!("{vec_a}"), "1 2 3");
         assert_eq!(format!("{vec_b}"), "0.5 1.9 10.99");
