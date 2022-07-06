@@ -1,6 +1,6 @@
 use derivative::Derivative;
 use std::fmt::{Display, Formatter};
-use std::ops::{Add, AddAssign, DivAssign, Index, Mul, MulAssign, Neg, Sub};
+use std::ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Neg, Sub};
 
 #[derive(Copy, Clone, Derivative)]
 #[derivative(Default)]
@@ -135,6 +135,14 @@ impl Mul<f64> for Vec3 {
 
     fn mul(self, rhs: f64) -> Self::Output {
         return rhs * self;
+    }
+}
+
+impl Div<f64> for Vec3 {
+    type Output = Self;
+
+    fn div(self, rhs: f64) -> Self::Output {
+        return (1.0 / rhs) * self;
     }
 }
 
@@ -444,5 +452,24 @@ mod tests {
         assert_eq!(3.0, vec_c.x());
         assert_eq!(6.0, vec_c.y());
         assert_eq!(9.0, vec_c.z());
+    }
+
+    #[test]
+    fn vec3_div_f64() {
+        let vec_a = Vec3 {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0,
+        };
+
+        let vec_c = vec_a / 2.0;
+
+        assert_eq!(1.0, vec_a.x());
+        assert_eq!(2.0, vec_a.y());
+        assert_eq!(3.0, vec_a.z());
+
+        assert_eq!(0.5, vec_c.x());
+        assert_eq!(1.0, vec_c.y());
+        assert_eq!(1.5, vec_c.z());
     }
 }
