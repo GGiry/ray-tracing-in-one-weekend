@@ -118,6 +118,18 @@ impl Mul for Vec3 {
     }
 }
 
+impl Mul<Vec3> for f64 {
+    type Output = Vec3;
+
+    fn mul(self, rhs: Vec3) -> Self::Output {
+        return Vec3 {
+            x: self * rhs.x,
+            y: self * rhs.y,
+            z: self * rhs.z,
+        };
+    }
+}
+
 impl Display for Vec3 {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{} {} {}", self.x, self.y, self.z)
@@ -359,6 +371,7 @@ mod tests {
         assert_eq!(-3.0, vec_c.y());
         assert_eq!(-3.0, vec_c.z());
     }
+
     #[test]
     fn vec3_mul_vec3() {
         let vec_a = Vec3 {
@@ -385,5 +398,24 @@ mod tests {
         assert_eq!(4.0, vec_c.x());
         assert_eq!(10.0, vec_c.y());
         assert_eq!(18.0, vec_c.z());
+    }
+
+    #[test]
+    fn vec3_mul_f64() {
+        let vec_a = Vec3 {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0,
+        };
+
+        let vec_c = 3.0 * vec_a;
+
+        assert_eq!(1.0, vec_a.x());
+        assert_eq!(2.0, vec_a.y());
+        assert_eq!(3.0, vec_a.z());
+
+        assert_eq!(3.0, vec_c.x());
+        assert_eq!(6.0, vec_c.y());
+        assert_eq!(9.0, vec_c.z());
     }
 }
