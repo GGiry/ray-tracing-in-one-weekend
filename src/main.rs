@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::io::Write;
-use std::ops::{AddAssign, Index, Neg};
+use std::ops::{AddAssign, Index, MulAssign, Neg};
 
 use derivative::Derivative;
 
@@ -60,6 +60,14 @@ impl AddAssign for Vec3 {
         self.x += rhs.x;
         self.y += rhs.y;
         self.z += rhs.z;
+    }
+}
+
+impl MulAssign<f64> for Vec3 {
+    fn mul_assign(&mut self, rhs: f64) {
+        self.x *= rhs;
+        self.y *= rhs;
+        self.z *= rhs;
     }
 }
 
@@ -177,5 +185,17 @@ mod tests {
         assert_eq!(5.0, vec_a.x());
         assert_eq!(7.0, vec_a.y());
         assert_eq!(9.0, vec_a.z());
+    }
+
+    #[test]
+    fn vec3_mul_assign() {
+        let mut vec_a = Vec3 {x: 1.0, y: 2.0, z: 3.0 };
+        let operand = 2.0;
+
+        vec_a *= operand;
+
+        assert_eq!(2.0, vec_a.x());
+        assert_eq!(4.0, vec_a.y());
+        assert_eq!(6.0, vec_a.z());
     }
 }
