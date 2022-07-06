@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::io::Write;
-use std::ops::{AddAssign, Index, MulAssign, Neg};
+use std::ops::{AddAssign, DivAssign, Index, MulAssign, Neg};
 
 use derivative::Derivative;
 
@@ -68,6 +68,13 @@ impl MulAssign<f64> for Vec3 {
         self.x *= rhs;
         self.y *= rhs;
         self.z *= rhs;
+    }
+}
+
+impl DivAssign<f64> for Vec3 {
+
+    fn div_assign(&mut self, rhs: f64) {
+        *self *= 1.0 / rhs;
     }
 }
 
@@ -197,5 +204,17 @@ mod tests {
         assert_eq!(2.0, vec_a.x());
         assert_eq!(4.0, vec_a.y());
         assert_eq!(6.0, vec_a.z());
+    }
+
+    #[test]
+    fn vec3_div_assign() {
+        let mut vec_a = Vec3 {x: 1.0, y: 2.0, z: 3.0 };
+        let operand = 2.0;
+
+        vec_a /= operand;
+
+        assert_eq!(0.5, vec_a.x());
+        assert_eq!(1.0, vec_a.y());
+        assert_eq!(1.5, vec_a.z());
     }
 }
