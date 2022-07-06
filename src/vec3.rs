@@ -33,6 +33,10 @@ impl Vec3 {
     fn length(&self) -> f64 {
         return self.length_squared().sqrt();
     }
+
+    fn unit_vector(&self) -> Vec3 {
+        return *self / self.length();
+    }
 }
 
 impl Neg for Vec3 {
@@ -537,5 +541,24 @@ mod tests {
         assert_eq!(-3.0, vec_c.x());
         assert_eq!(6.0, vec_c.y());
         assert_eq!(-3.0, vec_c.z());
+    }
+
+    #[test]
+    fn unit_vector() {
+        let vec = Vec3 {
+            x: 4.0,
+            y: 5.0,
+            z: 6.0,
+        };
+
+        let unit_vector = vec.unit_vector();
+
+        assert_eq!(4.0, vec.x());
+        assert_eq!(5.0, vec.y());
+        assert_eq!(6.0, vec.z());
+
+        assert_eq!(4.0 / 77.0_f64.sqrt(), unit_vector.x());
+        assert_eq!(5.0 / 77.0_f64.sqrt(), unit_vector.y());
+        assert_eq!(6.0 / 77.0_f64.sqrt(), unit_vector.z());
     }
 }
