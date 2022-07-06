@@ -156,6 +156,14 @@ fn dot(lhs: Vec3, rhs: Vec3) -> f64 {
     return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
 }
 
+fn cross(lhs: Vec3, rhs: Vec3) -> Vec3 {
+    return Vec3 {
+        x: lhs.y * rhs.z - lhs.z * rhs.y,
+        y: lhs.z * rhs.x - lhs.x * rhs.z,
+        z: lhs.x * rhs.y - lhs.y * rhs.x,
+    };
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -501,5 +509,33 @@ mod tests {
         assert_eq!(6.0, vec_b.z());
 
         assert_eq!(32.0, dot_product);
+    }
+
+    #[test]
+    fn vec3_cross_vec3() {
+        let vec_a = Vec3 {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0,
+        };
+        let vec_b = Vec3 {
+            x: 4.0,
+            y: 5.0,
+            z: 6.0,
+        };
+
+        let vec_c = cross(vec_a, vec_b);
+
+        assert_eq!(1.0, vec_a.x());
+        assert_eq!(2.0, vec_a.y());
+        assert_eq!(3.0, vec_a.z());
+
+        assert_eq!(4.0, vec_b.x());
+        assert_eq!(5.0, vec_b.y());
+        assert_eq!(6.0, vec_b.z());
+
+        assert_eq!(-3.0, vec_c.x());
+        assert_eq!(6.0, vec_c.y());
+        assert_eq!(-3.0, vec_c.z());
     }
 }
