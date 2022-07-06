@@ -51,7 +51,6 @@ impl Index<i32> for Vec3 {
     type Output = f64;
 
     fn index(&self, index: i32) -> &Self::Output {
-
         match index {
             0 => &self.x,
             1 => &self.y,
@@ -78,7 +77,6 @@ impl MulAssign<f64> for Vec3 {
 }
 
 impl DivAssign<f64> for Vec3 {
-
     fn div_assign(&mut self, rhs: f64) {
         *self *= 1.0 / rhs;
     }
@@ -143,6 +141,7 @@ mod tests {
     #[should_panic(expected = "-1 is not a valid index")]
     fn vec3_array_access_oob() {
         let vec = Vec3::default();
+
         vec[-1];
     }
 
@@ -150,6 +149,7 @@ mod tests {
     #[should_panic(expected ="3 is not a valid index")]
     fn vec3_array_access_oob2() {
         let vec = Vec3::default();
+
         vec[3];
     }
 
@@ -194,6 +194,7 @@ mod tests {
         let vec_default = Vec3::default();
         let vec_ones = Vec3 {x: 1.0, y: 1.0, z: 1.0 };
         let vec = Vec3 {x: 2.0, y: 3.0, z: 4.0 };
+
         assert_eq!(0.0, vec_default.length_squared());
         assert_eq!(3.0, vec_ones.length_squared());
         assert_eq!(29.0, vec.length_squared());
@@ -204,6 +205,7 @@ mod tests {
         let vec_default = Vec3::default();
         let vec_ones = Vec3 {x: 1.0, y: 1.0, z: 1.0 };
         let vec = Vec3 {x: 2.0, y: 3.0, z: 4.0 };
+
         assert_eq!(0.0_f64.sqrt(), vec_default.length());
         assert_eq!(3.0_f64.sqrt(), vec_ones.length());
         assert_eq!(29.0_f64.sqrt(), vec.length());
