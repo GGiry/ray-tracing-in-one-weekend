@@ -1,6 +1,6 @@
 use derivative::Derivative;
 use std::fmt::{Display, Formatter};
-use std::ops::{AddAssign, DivAssign, Index, MulAssign, Neg};
+use std::ops::{Add, AddAssign, DivAssign, Index, MulAssign, Neg};
 
 #[derive(Copy, Clone, Derivative)]
 #[derivative(Default)]
@@ -79,6 +79,18 @@ impl MulAssign<f64> for Vec3 {
 impl DivAssign<f64> for Vec3 {
     fn div_assign(&mut self, rhs: f64) {
         *self *= 1.0 / rhs;
+    }
+}
+
+impl Add for Vec3 {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        return Self {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+            z: self.z + rhs.z,
+        };
     }
 }
 
@@ -266,5 +278,33 @@ mod tests {
 
         assert_eq!(format!("{vec_a}"), "1 2 3");
         assert_eq!(format!("{vec_b}"), "0.5 1.9 10.99");
+    }
+
+    #[test]
+    fn vec3_add() {
+        let vec_a = Vec3 {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0,
+        };
+        let vec_b = Vec3 {
+            x: 4.0,
+            y: 5.0,
+            z: 6.0,
+        };
+
+        let vec_c = vec_a + vec_b;
+
+        assert_eq!(1.0, vec_a.x());
+        assert_eq!(2.0, vec_a.y());
+        assert_eq!(3.0, vec_a.z());
+
+        assert_eq!(4.0, vec_b.x());
+        assert_eq!(5.0, vec_b.y());
+        assert_eq!(6.0, vec_b.z());
+
+        assert_eq!(5.0, vec_c.x());
+        assert_eq!(7.0, vec_c.y());
+        assert_eq!(9.0, vec_c.z());
     }
 }
