@@ -31,6 +31,10 @@ impl Vec3 {
     fn length_squared(&self) -> f64 {
         return self.x * self.x + self.y * self.y + self.z * self.z;
     }
+
+    fn length(&self) -> f64 {
+        return self.length_squared().sqrt();
+    }
 }
 
 impl Neg for Vec3 {
@@ -230,5 +234,15 @@ mod tests {
         assert_eq!(0.0, vec_default.length_squared());
         assert_eq!(3.0, vec_ones.length_squared());
         assert_eq!(29.0, vec.length_squared());
+    }
+
+    #[test]
+    fn vec3_length() {
+        let vec_default = Vec3::default();
+        let vec_ones = Vec3 {x: 1.0, y: 1.0, z: 1.0 };
+        let vec = Vec3 {x: 2.0, y: 3.0, z: 4.0 };
+        assert_eq!(0.0_f64.sqrt(), vec_default.length());
+        assert_eq!(3.0_f64.sqrt(), vec_ones.length());
+        assert_eq!(29.0_f64.sqrt(), vec.length());
     }
 }
