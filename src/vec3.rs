@@ -1,3 +1,4 @@
+use std::fmt::{Display, Formatter};
 use std::ops::{AddAssign, DivAssign, Index, MulAssign, Neg};
 use derivative::Derivative;
 
@@ -80,6 +81,12 @@ impl DivAssign<f64> for Vec3 {
 
     fn div_assign(&mut self, rhs: f64) {
         *self *= 1.0 / rhs;
+    }
+}
+
+impl Display for Vec3 {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{} {} {}", self.x, self.y, self.z)
     }
 }
 
@@ -200,5 +207,14 @@ mod tests {
         assert_eq!(0.0_f64.sqrt(), vec_default.length());
         assert_eq!(3.0_f64.sqrt(), vec_ones.length());
         assert_eq!(29.0_f64.sqrt(), vec.length());
+    }
+
+    #[test]
+    fn vec3_display() {
+        let vec_a = Vec3 {x: 1.0, y: 2.0, z: 3.0 };
+        let vec_b = Vec3 {x: 0.5, y: 1.9, z: 10.99 };
+
+        assert_eq!(format!("{vec_a}"), "1 2 3");
+        assert_eq!(format!("{vec_b}"), "0.5 1.9 10.99");
     }
 }
