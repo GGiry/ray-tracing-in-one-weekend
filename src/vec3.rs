@@ -14,27 +14,35 @@ pub struct Vec3 {
 }
 
 impl Vec3 {
-    fn x(&self) -> f64 {
+    pub fn new(x: f64, y: f64, z: f64) -> Vec3 {
+        return Vec3{
+            x,
+            y,
+            z,
+        }
+    }
+
+    pub fn x(&self) -> f64 {
         return self.x;
     }
 
-    fn y(&self) -> f64 {
+    pub fn y(&self) -> f64 {
         return self.y;
     }
 
-    fn z(&self) -> f64 {
+    pub fn z(&self) -> f64 {
         return self.z;
     }
 
-    fn length_squared(&self) -> f64 {
+    pub fn length_squared(&self) -> f64 {
         return self.x * self.x + self.y * self.y + self.z * self.z;
     }
 
-    fn length(&self) -> f64 {
+    pub fn length(&self) -> f64 {
         return self.length_squared().sqrt();
     }
 
-    fn unit_vector(&self) -> Vec3 {
+    pub fn unit_vector(&self) -> Vec3 {
         return *self / self.length();
     }
 }
