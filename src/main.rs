@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::io::Write;
 
+mod ray;
 mod utils;
 mod vec3;
 
