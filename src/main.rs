@@ -4,6 +4,11 @@ use std::io::Write;
 mod vec3;
 mod utils;
 
+use crate::vec3::Vec3;
+use crate::utils::write_color;
+
+use Vec3 as Color;
+
 fn create_gradient(path: &str) {
     let mut file = File::create(path).unwrap();
 
@@ -18,16 +23,9 @@ fn create_gradient(path: &str) {
     for index_height in (0..image_height).rev() {
         eprintln!("Scanlines remaining: {index_height}");
         for index_width in 0..image_width {
-            let red = index_width as f64 / ((image_width - 1) as f64);
-            let green = index_height as f64 / ((image_height - 1) as f64);
-            let blue = 0.25;
+            let pixel = Color::new(index_width as f64 / ((image_width - 1) as f64), index_height as f64 / ((image_height - 1) as f64), 0.25 );
 
-            let int_red: i32 = (255.999 * red) as i32;
-            let int_green: i32 = (255.999 * green) as i32;
-            let int_blue: i32 = (255.999 * blue) as i32;
-
-            file.write_all(format!("{int_red} {int_green} {int_blue}\n").as_bytes())
-                .expect("Unable to write data");
+            write_color(&mut file, pixel);
         }
     }
     eprintln!("Done.");

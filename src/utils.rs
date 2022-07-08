@@ -4,7 +4,7 @@ use crate::vec3::Vec3;
 
 use Vec3 as Color;
 
-fn write_color(mut file: File, pixel: Color) {
+pub(crate) fn write_color(file: &mut File, pixel: Color) {
     let int_red: i32 = (255.999 * pixel.x()) as i32;
     let int_green: i32 = (255.999 * pixel.y()) as i32;
     let int_blue: i32 = (255.999 * pixel.z()) as i32;
@@ -21,9 +21,9 @@ mod tests {
     #[test]
     fn write_pixel() {
         let result_path = "expected_pixel.txt";
-        let file = File::create(result_path).unwrap();
+        let mut file = File::create(result_path).unwrap();
         let pixel = Color::new(0.0, 0.5, 0.9);
-        write_color(file, pixel );
+        write_color(&mut file, pixel );
         assert_eq!(true, diff("expected_pixel.txt", result_path));
     }
 }
