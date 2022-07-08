@@ -9,7 +9,7 @@ pub(crate) fn write_color(file: &mut File, pixel: Color) {
     let int_green: i32 = (255.999 * pixel.y()) as i32;
     let int_blue: i32 = (255.999 * pixel.z()) as i32;
 
-    file.write_all(format!("{int_red} {int_green} {int_blue}\n").as_bytes())
+    file.write_all(format!("{} {} {}\n", int_red, int_green, int_blue).as_bytes())
         .expect("Unable to write data");
 }
 
