@@ -2,6 +2,7 @@ use std::fs::File;
 use std::io::Write;
 
 mod vec3;
+mod utils;
 
 fn create_gradient(path: &str) {
     let mut file = File::create(path).unwrap();
