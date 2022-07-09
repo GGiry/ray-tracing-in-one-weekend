@@ -1,7 +1,9 @@
 use std::fs::File;
 use std::io::Write;
 
+mod hittable;
 mod ray;
+mod sphere;
 mod utils;
 mod vec3;
 
