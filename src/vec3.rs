@@ -168,11 +168,11 @@ impl PartialEq<Self> for Vec3 {
 
 impl Eq for Vec3 {}
 
-fn dot(lhs: Vec3, rhs: Vec3) -> f64 {
+pub fn dot(lhs: Vec3, rhs: Vec3) -> f64 {
     return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
 }
 
-fn cross(lhs: Vec3, rhs: Vec3) -> Vec3 {
+pub fn cross(lhs: Vec3, rhs: Vec3) -> Vec3 {
     return Vec3 {
         x: lhs.y * rhs.z - lhs.z * rhs.y,
         y: lhs.z * rhs.x - lhs.x * rhs.z,

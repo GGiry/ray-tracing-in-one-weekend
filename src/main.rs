@@ -6,7 +6,7 @@ mod utils;
 mod vec3;
 
 use crate::utils::write_color;
-use crate::vec3::Vec3;
+use crate::vec3::{dot, Vec3};
 
 use crate::ray::Ray;
 use Vec3 as Color;
@@ -23,6 +23,15 @@ fn ray_color(ray: Ray) -> Color {
     let t = 0.5 * (unit_direction.y() + 1.0);
 
     return linear_blend(t, white, light_blue);
+}
+
+fn hit_sphere(center: Point3, radius: f64, ray: Ray) -> bool {
+    let oc = ray.origin() - center;
+    let a = dot(ray.direction(), ray.direction());
+    let b = 2.0 * dot(oc, ray.direction());
+    let c = dot(oc, oc) - radius * radius;
+    let discriminant = b * b - 4.0 * a * c;
+    return discriminant > 0.0;
 }
 
 fn create_gradient(path: &str) {
@@ -119,5 +128,21 @@ mod tests {
         assert_eq!(white, grey_0_0);
         assert_eq!(expected_grey, grey_0_5);
         assert_eq!(black, grey_1_0);
+    }
+
+    #[test]
+    fn hit_sphere_test() {
+        let center = Point3::new(0.0, 0.0, 0.0);
+        let radius = 1.0;
+
+        let origin = Point3::new(0.0, 0.0, 3.0);
+        let direction = Vec3::new(0.0, 0.0, -1.0);
+        let ray_touching = Ray::new(origin, direction);
+
+        let direction2 = Vec3::new(0.0, 1.0, 0.0);
+        let ray_not_touching = Ray::new(origin, direction2);
+
+        assert!(hit_sphere(center, radius, ray_touching));
+        assert!(!hit_sphere(center, radius, ray_not_touching));
     }
 }
