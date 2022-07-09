@@ -16,18 +16,25 @@ fn linear_blend(t: f64, start: Color, end: Color) -> Color {
     return (1.0 - t) * start + t * end;
 }
 
-fn hit_sphere(center: Point3, radius: f64, ray: &Ray) -> bool {
+fn hit_sphere(center: Point3, radius: f64, ray: &Ray) -> f64 {
     let oc = ray.origin() - center;
     let a = dot(ray.direction(), ray.direction());
     let b = 2.0 * dot(oc, ray.direction());
     let c = dot(oc, oc) - radius * radius;
     let discriminant = b * b - 4.0 * a * c;
-    return discriminant > 0.0;
+
+    if discriminant < 0.0 {
+        return -1.0;
+    }
+
+    return (-b - discriminant.sqrt()) / (2.0 * a);
 }
 
 fn ray_color(ray: &Ray) -> Color {
-    if hit_sphere(Point3::new(0.0, 0.0, -1.0), 0.5, ray) {
-        return Color::new(1.0, 0.0, 0.0);
+    let t = hit_sphere(Point3::new(0.0, 0.0, -1.0), 0.5, ray);
+    if t > 0.0 {
+        let normal = (ray.at(t) - Vec3::new(0.0, 0.0, -1.0)).unit_vector();
+        return 0.5 * Color::new(normal.x() + 1.0, normal.y() + 1.0, normal.z() + 1.0);
     }
     let unit_direction = ray.direction().unit_vector();
     let white = Color::new(1.0, 1.0, 1.0);
