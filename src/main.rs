@@ -16,22 +16,25 @@ fn linear_blend(t: f64, start: Color, end: Color) -> Color {
     return (1.0 - t) * start + t * end;
 }
 
-fn ray_color(ray: Ray) -> Color {
-    let unit_direction = ray.direction().unit_vector();
-    let white = Color::new(1.0, 1.0, 1.0);
-    let light_blue = Color::new(0.5, 0.7, 1.0);
-    let t = 0.5 * (unit_direction.y() + 1.0);
-
-    return linear_blend(t, white, light_blue);
-}
-
-fn hit_sphere(center: Point3, radius: f64, ray: Ray) -> bool {
+fn hit_sphere(center: Point3, radius: f64, ray: &Ray) -> bool {
     let oc = ray.origin() - center;
     let a = dot(ray.direction(), ray.direction());
     let b = 2.0 * dot(oc, ray.direction());
     let c = dot(oc, oc) - radius * radius;
     let discriminant = b * b - 4.0 * a * c;
     return discriminant > 0.0;
+}
+
+fn ray_color(ray: &Ray) -> Color {
+    if hit_sphere(Point3::new(0.0, 0.0, -1.0), 0.5, ray) {
+        return Color::new(1.0, 0.0, 0.0);
+    }
+    let unit_direction = ray.direction().unit_vector();
+    let white = Color::new(1.0, 1.0, 1.0);
+    let light_blue = Color::new(0.5, 0.7, 1.0);
+    let t = 0.5 * (unit_direction.y() + 1.0);
+
+    return linear_blend(t, white, light_blue);
 }
 
 fn create_gradient(path: &str) {
@@ -96,7 +99,7 @@ fn main() {
                 origin,
                 lower_left_corner + u * horizontal + v * vertical - origin,
             );
-            let pixel_color = ray_color(ray);
+            let pixel_color = ray_color(&ray);
 
             write_color(&mut file, pixel_color);
         }
@@ -142,7 +145,7 @@ mod tests {
         let direction2 = Vec3::new(0.0, 1.0, 0.0);
         let ray_not_touching = Ray::new(origin, direction2);
 
-        assert!(hit_sphere(center, radius, ray_touching));
-        assert!(!hit_sphere(center, radius, ray_not_touching));
+        assert!(hit_sphere(center, radius, &ray_touching));
+        assert!(!hit_sphere(center, radius, &ray_not_touching));
     }
 }
