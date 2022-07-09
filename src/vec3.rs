@@ -168,11 +168,11 @@ impl PartialEq<Self> for Vec3 {
 
 impl Eq for Vec3 {}
 
-pub fn dot(lhs: Vec3, rhs: Vec3) -> f64 {
+pub fn dot(lhs: &Vec3, rhs: &Vec3) -> f64 {
     return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
 }
 
-pub fn cross(lhs: Vec3, rhs: Vec3) -> Vec3 {
+pub fn cross(lhs: &Vec3, rhs: &Vec3) -> Vec3 {
     return Vec3 {
         x: lhs.y * rhs.z - lhs.z * rhs.y,
         y: lhs.z * rhs.x - lhs.x * rhs.z,
@@ -514,7 +514,7 @@ mod tests {
             z: 6.0,
         };
 
-        let dot_product = dot(vec_a, vec_b);
+        let dot_product = dot(&vec_a, &vec_b);
 
         assert_eq!(1.0, vec_a.x());
         assert_eq!(2.0, vec_a.y());
@@ -540,7 +540,7 @@ mod tests {
             z: 6.0,
         };
 
-        let vec_c = cross(vec_a, vec_b);
+        let vec_c = cross(&vec_a, &vec_b);
 
         assert_eq!(1.0, vec_a.x());
         assert_eq!(2.0, vec_a.y());

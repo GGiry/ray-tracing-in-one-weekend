@@ -21,7 +21,7 @@ fn linear_blend(t: f64, start: Color, end: Color) -> Color {
 fn hit_sphere(center: Point3, radius: f64, ray: &Ray) -> f64 {
     let oc = ray.origin() - center;
     let a = ray.direction().length_squared();
-    let half_b = dot(oc, ray.direction());
+    let half_b = dot(&oc, &ray.direction());
     let c = oc.length_squared() - radius * radius;
     let discriminant = half_b * half_b - a * c;
 
@@ -154,7 +154,7 @@ mod tests {
         let direction2 = Vec3::new(0.0, 1.0, 0.0);
         let ray_not_touching = Ray::new(origin, direction2);
 
-        assert!(hit_sphere(center, radius, &ray_touching));
-        assert!(!hit_sphere(center, radius, &ray_not_touching));
+        assert!(0.0 < hit_sphere(center, radius, &ray_touching));
+        assert!(0.0 > hit_sphere(center, radius, &ray_not_touching));
     }
 }
