@@ -160,6 +160,14 @@ impl Display for Vec3 {
     }
 }
 
+impl PartialEq<Self> for Vec3 {
+    fn eq(&self, other: &Self) -> bool {
+        return self.x == other.x && self.y == other.y && self.z == other.z;
+    }
+}
+
+impl Eq for Vec3 {}
+
 fn dot(lhs: Vec3, rhs: Vec3) -> f64 {
     return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
 }
@@ -564,5 +572,22 @@ mod tests {
         assert_eq!(4.0 / 77.0_f64.sqrt(), unit_vector.x());
         assert_eq!(5.0 / 77.0_f64.sqrt(), unit_vector.y());
         assert_eq!(6.0 / 77.0_f64.sqrt(), unit_vector.z());
+    }
+
+    #[test]
+    fn vector_cmp() {
+        let vec_a = Vec3 {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0,
+        };
+
+        let vec_b = Vec3 {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0,
+        };
+
+        assert!(vec_a == vec_b);
     }
 }
