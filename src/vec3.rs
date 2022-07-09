@@ -3,7 +3,7 @@ use std::fmt::{Display, Formatter};
 use std::ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Neg, Sub};
 
 #[derive(Copy, Clone, Derivative)]
-#[derivative(Default)]
+#[derivative(Debug, Default)]
 pub struct Vec3 {
     #[derivative(Default(value = "0.0"))]
     x: f64,

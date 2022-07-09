@@ -19,6 +19,10 @@ impl Ray {
     pub fn direction(&self) -> Vec3 {
         return self.direction;
     }
+
+    pub fn at(&self, t: f64) -> Point3 {
+        return self.origin + t * self.direction;
+    }
 }
 
 #[cfg(test)]
@@ -26,7 +30,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn vec3_default() {
+    fn ray_accessors() {
         let origin = Point3::new(1.0, 2.0, 3.0);
         let direction = Vec3::new(4.0, 5.0, 6.0);
 
@@ -39,5 +43,24 @@ mod tests {
         assert_eq!(4.0, ray.direction().x());
         assert_eq!(5.0, ray.direction().y());
         assert_eq!(6.0, ray.direction().z());
+    }
+
+    #[test]
+    fn ray_at() {
+        let origin = Point3::new(1.0, 2.0, 3.0);
+        let direction = Vec3::new(4.0, 5.0, 6.0);
+
+        let expected_at1 = Point3::new(1.0 + 4.0, 2.0 + 5.0, 3.0 + 6.0);
+        let expected_at2 = Point3::new(1.0 + 8.0, 2.0 + 10.0, 3.0 + 12.0);
+
+        let ray = Ray::new(origin, direction);
+
+        let at0 = ray.at(0.0);
+        let at1 = ray.at(1.0);
+        let at2 = ray.at(2.0);
+
+        assert_eq!(origin, at0);
+        assert_eq!(expected_at1, at1);
+        assert_eq!(expected_at2, at2);
     }
 }
