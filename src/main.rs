@@ -79,7 +79,7 @@ fn main() {
             );
             let pixel_color = ray_color(&ray, &world);
 
-            write_color(&mut file, pixel_color);
+            write_color(&mut file, pixel_color, 1);
         }
     }
 }
@@ -87,7 +87,6 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use file_diff::diff;
 
     #[test]
     fn linear_blend_test() {
