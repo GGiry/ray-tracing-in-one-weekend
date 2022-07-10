@@ -2,6 +2,7 @@ use crate::vec3::Vec3;
 
 use Vec3 as Point3;
 
+#[derive(Debug)]
 pub struct Ray {
     origin: Point3,
     direction: Vec3,
@@ -24,6 +25,14 @@ impl Ray {
         return self.origin + t * self.direction;
     }
 }
+
+impl PartialEq for Ray {
+    fn eq(&self, other: &Self) -> bool {
+        return self.origin == other.origin && self.direction == other.direction;
+    }
+}
+
+impl Eq for Ray {}
 
 #[cfg(test)]
 mod tests {
