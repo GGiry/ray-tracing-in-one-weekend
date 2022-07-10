@@ -44,6 +44,10 @@ impl Hittable for Sphere {
     }
 }
 
-        return true;
+impl PartialEq<Self> for Sphere {
+    fn eq(&self, other: &Self) -> bool {
+        return self.center == other.center && self.radius == other.radius;
     }
 }
+
+impl Eq for Sphere {}
