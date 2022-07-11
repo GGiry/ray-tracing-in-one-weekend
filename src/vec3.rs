@@ -1,6 +1,9 @@
-use derivative::Derivative;
 use std::fmt::{Display, Formatter};
 use std::ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Neg, Sub};
+
+use derivative::Derivative;
+
+use crate::utils::{random_f64, random_f64_range};
 
 #[derive(Copy, Clone, Derivative)]
 #[derivative(Debug, Default)]
@@ -40,6 +43,32 @@ impl Vec3 {
 
     pub fn unit_vector(&self) -> Vec3 {
         return *self / self.length();
+    }
+
+    pub fn random() -> Vec3 {
+        return Vec3 {
+            x: random_f64(),
+            y: random_f64(),
+            z: random_f64(),
+        };
+    }
+
+    pub fn random_range(min: f64, max: f64) -> Vec3 {
+        return Vec3 {
+            x: random_f64_range(min, max),
+            y: random_f64_range(min, max),
+            z: random_f64_range(min, max),
+        };
+    }
+
+    pub fn random_in_unit_sphere() -> Vec3 {
+        loop {
+            let result = Vec3::random_range(-1.0, 1.0);
+            if result.length_squared() >= 1.0 {
+                continue;
+            }
+            return result;
+        }
     }
 }
 
