@@ -1,7 +1,16 @@
-use rand::Rng;
-
 use std::fs::File;
 use std::io::Write;
+
+use Vec3 as Color;
+use Vec3 as Point3;
+
+use crate::camera::Camera;
+use crate::hittable::Hittable;
+use crate::hittable_list::HittableList;
+use crate::ray::Ray;
+use crate::sphere::Sphere;
+use crate::utils::{random_f64, write_color};
+use crate::vec3::{dot, Vec3};
 
 mod camera;
 mod hittable;
@@ -10,17 +19,6 @@ mod ray;
 mod sphere;
 mod utils;
 mod vec3;
-
-use crate::utils::write_color;
-use crate::vec3::{dot, Vec3};
-
-use crate::camera::Camera;
-use crate::hittable::Hittable;
-use crate::hittable_list::HittableList;
-use crate::ray::Ray;
-use crate::sphere::Sphere;
-use Vec3 as Color;
-use Vec3 as Point3;
 
 fn linear_blend(t: f64, start: Color, end: Color) -> Color {
     return (1.0 - t) * start + t * end;
@@ -50,8 +48,6 @@ fn main() {
     let image_height = (image_width as f64 / aspect_ratio) as u32;
     let samples_per_pixel = 100;
 
-    let mut rng = rand::thread_rng();
-
     // World
     let mut world = HittableList::new();
     world.add(Box::new(Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5)));
@@ -71,8 +67,8 @@ fn main() {
         for index_width in 0..image_width {
             let mut pixel_color = Color::default();
             for _ in 0..samples_per_pixel {
-                let u = (index_width as f64 + rng.gen::<f64>()) / ((image_width - 1) as f64);
-                let v = (index_height as f64 + rng.gen::<f64>()) / ((image_height - 1) as f64);
+                let u = (index_width as f64 + random_f64()) / ((image_width - 1) as f64);
+                let v = (index_height as f64 + random_f64()) / ((image_height - 1) as f64);
                 let ray = camera.get_ray(u, v);
                 pixel_color += ray_color(&ray, &world);
             }
