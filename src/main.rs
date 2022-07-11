@@ -24,12 +24,18 @@ fn linear_blend(t: f64, start: Color, end: Color) -> Color {
     return (1.0 - t) * start + t * end;
 }
 
-fn ray_color(ray: &Ray, world: &HittableList) -> Color {
+fn ray_color(ray: &Ray, world: &HittableList, depth: u32) -> Color {
     let white = Color::new(1.0, 1.0, 1.0);
     let light_blue = Color::new(0.5, 0.7, 1.0);
 
+    if depth <= 0 {
+        return Color::new(0.0, 0.0, 0.0);
+    }
+
     if let Some(hit) = world.hit(ray, 0.0, f64::INFINITY) {
-        return 0.5 * (hit.normal + white);
+        let target = hit.point + hit.normal + Vec3::random_in_unit_sphere();
+        let rebound = Ray::new(hit.point, target - hit.point);
+        return 0.5 * ray_color(&rebound, world, depth - 1);
     }
 
     let unit_direction = ray.direction().unit_vector();
@@ -47,6 +53,7 @@ fn main() {
     let image_width: u32 = 400;
     let image_height = (image_width as f64 / aspect_ratio) as u32;
     let samples_per_pixel = 100;
+    let max_depth = 20;
 
     // World
     let mut world = HittableList::new();
@@ -70,7 +77,7 @@ fn main() {
                 let u = (index_width as f64 + random_f64()) / ((image_width - 1) as f64);
                 let v = (index_height as f64 + random_f64()) / ((image_height - 1) as f64);
                 let ray = camera.get_ray(u, v);
-                pixel_color += ray_color(&ray, &world);
+                pixel_color += ray_color(&ray, &world, max_depth);
             }
             write_color(&mut file, pixel_color, samples_per_pixel);
         }
