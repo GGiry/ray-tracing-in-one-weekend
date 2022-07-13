@@ -9,7 +9,7 @@ use crate::hittable::Hittable;
 use crate::hittable_list::HittableList;
 use crate::ray::Ray;
 use crate::sphere::Sphere;
-use crate::utils::{random_f64, write_color};
+use crate::utils::{color_to_rbg, random_f64};
 use crate::vec3::{dot, Vec3};
 
 mod camera;
@@ -74,6 +74,8 @@ fn main() {
         .expect("Unable to write data");
     file.write_all(b"255\n").expect("Unable to write data");
 
+    let mut image = Vec::new();
+
     for index_height in (0..image_height).rev() {
         eprintln!("Scanlines remaining: {index_height}");
         for index_width in 0..image_width {
@@ -84,8 +86,14 @@ fn main() {
                 let ray = camera.get_ray(u, v);
                 pixel_color += ray_color(&ray, &world, max_depth);
             }
-            write_color(&mut file, pixel_color, samples_per_pixel);
+
+            image.push(color_to_rbg(pixel_color, samples_per_pixel));
         }
+    }
+
+    for rbg in image {
+        file.write_all(format!("{} {} {}\n", rbg[0], rbg[1], rbg[2]).as_bytes())
+            .expect("Unable to write data");
     }
 }
 
