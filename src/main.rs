@@ -44,6 +44,13 @@ fn ray_color(ray: &Ray, world: &HittableList, depth: u32) -> Color {
     return linear_blend(t, white, light_blue);
 }
 
+fn scene() -> HittableList {
+    let mut world_mut = HittableList::new();
+    world_mut.add(Box::new(Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5)));
+    world_mut.add(Box::new(Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0)));
+    return world_mut;
+}
+
 fn main() {
     // Image file
     let mut file = File::create("result.ppm").unwrap();
@@ -56,9 +63,7 @@ fn main() {
     let max_depth = 20;
 
     // World
-    let mut world = HittableList::new();
-    world.add(Box::new(Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5)));
-    world.add(Box::new(Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0)));
+    let world = scene();
 
     // Camera
     let camera = Camera::new();
