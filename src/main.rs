@@ -54,9 +54,6 @@ fn scene() -> HittableList {
 }
 
 fn main() {
-    // Image file
-    let mut file = File::create("result.ppm").unwrap();
-
     // Image
     let aspect_ratio = 16.0 / 9.0;
     let image_width: u32 = 400;
@@ -71,11 +68,6 @@ fn main() {
     let camera = Camera::new();
 
     // Render
-    file.write_all(b"P3\n").expect("Unable to write data");
-    file.write_all(format!("{image_width} {image_height}\n").as_bytes())
-        .expect("Unable to write data");
-    file.write_all(b"255\n").expect("Unable to write data");
-
     let image = (0..image_height)
         .into_par_iter()
         .rev()
@@ -99,6 +91,13 @@ fn main() {
                 .collect::<Vec<u8>>()
         })
         .collect::<Vec<u8>>();
+
+    // Write result to file
+    let mut file = File::create("result.ppm").unwrap();
+    file.write_all(b"P3\n").expect("Unable to write data");
+    file.write_all(format!("{image_width} {image_height}\n").as_bytes())
+        .expect("Unable to write data");
+    file.write_all(b"255\n").expect("Unable to write data");
 
     for rgb in image.chunks(3) {
         file.write_all(format!("{} {} {}\n", rgb[0], rgb[1], rgb[2]).as_bytes())
