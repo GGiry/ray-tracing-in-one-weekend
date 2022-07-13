@@ -79,13 +79,14 @@ fn main() {
     for index_height in (0..image_height).rev() {
         eprintln!("Scanlines remaining: {index_height}");
         for index_width in 0..image_width {
-            let mut pixel_color = Color::default();
-            for _ in 0..samples_per_pixel {
-                let u = (index_width as f64 + random_f64()) / ((image_width - 1) as f64);
-                let v = (index_height as f64 + random_f64()) / ((image_height - 1) as f64);
-                let ray = camera.get_ray(u, v);
-                pixel_color += ray_color(&ray, &world, max_depth);
-            }
+            let mut pixel_color: Vec3 = (0..samples_per_pixel)
+                .map(|_| {
+                    let u = (index_width as f64 + random_f64()) / ((image_width - 1) as f64);
+                    let v = (index_height as f64 + random_f64()) / ((image_height - 1) as f64);
+                    let ray = camera.get_ray(u, v);
+                    return ray_color(&ray, &world, max_depth);
+                })
+                .sum();
 
             image.push(color_to_rbg(pixel_color, samples_per_pixel));
         }
