@@ -74,27 +74,29 @@ fn main() {
         .expect("Unable to write data");
     file.write_all(b"255\n").expect("Unable to write data");
 
-    let mut image: Vec<u8> = Vec::new();
+    let image = (0..image_height)
+        .into_iter()
+        .rev()
+        .flat_map(|index_height| {
+            eprintln!("Scanlines remaining: {index_height}");
+            (0..image_width)
+                .flat_map(|index_width| {
+                    let mut pixel_color: Vec3 = (0..samples_per_pixel)
+                        .map(|_| {
+                            let u =
+                                (index_width as f64 + random_f64()) / ((image_width - 1) as f64);
+                            let v =
+                                (index_height as f64 + random_f64()) / ((image_height - 1) as f64);
+                            let ray = camera.get_ray(u, v);
+                            return ray_color(&ray, &world, max_depth);
+                        })
+                        .sum();
 
-    for index_height in (0..image_height).rev() {
-        eprintln!("Scanlines remaining: {index_height}");
-        let mut rows = (0..image_width)
-            .flat_map(|index_width| {
-                let mut pixel_color: Vec3 = (0..samples_per_pixel)
-                    .map(|_| {
-                        let u = (index_width as f64 + random_f64()) / ((image_width - 1) as f64);
-                        let v = (index_height as f64 + random_f64()) / ((image_height - 1) as f64);
-                        let ray = camera.get_ray(u, v);
-                        return ray_color(&ray, &world, max_depth);
-                    })
-                    .sum();
-
-                return color_to_rbg(pixel_color, samples_per_pixel);
-            })
-            .collect::<Vec<u8>>();
-
-        image.append(&mut rows);
-    }
+                    return color_to_rbg(pixel_color, samples_per_pixel);
+                })
+                .collect::<Vec<u8>>()
+        })
+        .collect::<Vec<u8>>();
 
     for rgb in image.chunks(3) {
         file.write_all(format!("{} {} {}\n", rgb[0], rgb[1], rgb[2]).as_bytes())
