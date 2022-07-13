@@ -19,14 +19,27 @@ pub fn clamp(x: f64, min: f64, max: f64) -> f64 {
     return x;
 }
 
-pub fn write_color(file: &mut File, pixel: Color, samples_per_pixel: u32) {
+pub fn channel_to_rgb(pixel: f64, scale: f64) -> u8 {
+    // Gamma correction is color ^ 1 / gamma value. Here we gamma correct of 2.
+    let gamma_corrected = (pixel * scale).sqrt();
+    return (256.0 * clamp(gamma_corrected, 0.0, 0.999)) as u8;
+}
+
+pub fn color_to_rbg(pixel: Color, samples_per_pixel: u32) -> Vec<u8> {
     let scale = 1.0 / (samples_per_pixel as f64);
+    let mut result = Vec::new();
 
-    let int_red = (256.0 * clamp(pixel.x() * scale, 0.0, 0.999)) as u32;
-    let int_green = (256.0 * clamp(pixel.y() * scale, 0.0, 0.999)) as u32;
-    let int_blue = (256.0 * clamp(pixel.z() * scale, 0.0, 0.999)) as u32;
+    result.push(channel_to_rgb(pixel.x(), scale));
+    result.push(channel_to_rgb(pixel.y(), scale));
+    result.push(channel_to_rgb(pixel.z(), scale));
 
-    file.write_all(format!("{} {} {}\n", int_red, int_green, int_blue).as_bytes())
+    return result;
+}
+
+pub fn write_color(file: &mut File, pixel: Color, samples_per_pixel: u32) {
+    let rbg = color_to_rbg(pixel, samples_per_pixel);
+
+    file.write_all(format!("{} {} {}\n", rbg[0], rbg[1], rbg[2]).as_bytes())
         .expect("Unable to write data");
 }
 
