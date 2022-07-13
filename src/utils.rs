@@ -1,6 +1,3 @@
-use std::fs::File;
-use std::io::Write;
-
 use rand::Rng;
 
 use Vec3 as Color;
@@ -36,13 +33,6 @@ pub fn color_to_rbg(pixel: Color, samples_per_pixel: u32) -> Vec<u8> {
     return result;
 }
 
-pub fn write_color(file: &mut File, pixel: Color, samples_per_pixel: u32) {
-    let rbg = color_to_rbg(pixel, samples_per_pixel);
-
-    file.write_all(format!("{} {} {}\n", rbg[0], rbg[1], rbg[2]).as_bytes())
-        .expect("Unable to write data");
-}
-
 pub fn random_f64() -> f64 {
     return rand::thread_rng().gen();
 }
@@ -53,18 +43,7 @@ pub fn random_f64_range(min: f64, max: f64) -> f64 {
 
 #[cfg(test)]
 mod tests {
-    use file_diff::diff;
-
     use super::*;
-
-    #[test]
-    fn write_pixel() {
-        let result_path = "expected_pixel.txt";
-        let mut file = File::create(result_path).unwrap();
-        let pixel = Color::new(0.0, 0.5, 0.9);
-        write_color(&mut file, pixel, 1);
-        assert_eq!(true, diff("expected_pixel.txt", result_path));
-    }
 
     #[test]
     fn clamp_test() {

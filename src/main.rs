@@ -62,7 +62,7 @@ fn main() {
     let image_width: u32 = 400;
     let image_height = (image_width as f64 / aspect_ratio) as u32;
     let samples_per_pixel = 100;
-    let max_depth = 20;
+    let max_depth = 50;
 
     // World
     let world = scene();
@@ -83,7 +83,7 @@ fn main() {
             eprintln!("Scanlines remaining: {index_height}");
             (0..image_width)
                 .flat_map(|index_width| {
-                    let mut pixel_color: Vec3 = (0..samples_per_pixel)
+                    let pixel_color: Vec3 = (0..samples_per_pixel)
                         .map(|_| {
                             let u =
                                 (index_width as f64 + random_f64()) / ((image_width - 1) as f64);
