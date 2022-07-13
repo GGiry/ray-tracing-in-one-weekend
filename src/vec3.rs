@@ -1,4 +1,5 @@
 use std::fmt::{Display, Formatter};
+use std::iter::Sum;
 use std::ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Neg, Sub};
 
 use derivative::Derivative;
@@ -200,6 +201,16 @@ impl PartialEq<Self> for Vec3 {
 }
 
 impl Eq for Vec3 {}
+
+impl Sum<Vec3> for Vec3 {
+    fn sum<I: Iterator<Item = Vec3>>(iter: I) -> Self {
+        let mut result = Vec3::default();
+        for vec in iter {
+            result += vec;
+        }
+        return result;
+    }
+}
 
 pub fn dot(lhs: &Vec3, rhs: &Vec3) -> f64 {
     return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;

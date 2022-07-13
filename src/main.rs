@@ -1,6 +1,8 @@
 use std::fs::File;
 use std::io::Write;
 
+use rayon::prelude::*;
+
 use Vec3 as Color;
 use Vec3 as Point3;
 
@@ -75,7 +77,7 @@ fn main() {
     file.write_all(b"255\n").expect("Unable to write data");
 
     let image = (0..image_height)
-        .into_iter()
+        .into_par_iter()
         .rev()
         .flat_map(|index_height| {
             eprintln!("Scanlines remaining: {index_height}");
