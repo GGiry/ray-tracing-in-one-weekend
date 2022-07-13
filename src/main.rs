@@ -32,8 +32,8 @@ fn ray_color(ray: &Ray, world: &HittableList, depth: u32) -> Color {
         return Color::new(0.0, 0.0, 0.0);
     }
 
-    if let Some(hit) = world.hit(ray, 0.0, f64::INFINITY) {
-        let target = hit.point + hit.normal + Vec3::random_in_unit_sphere();
+    if let Some(hit) = world.hit(ray, 0.001, f64::INFINITY) {
+        let target = hit.point + hit.normal + Vec3::random_unit_vector();
         let rebound = Ray::new(hit.point, target - hit.point);
         return 0.5 * ray_color(&rebound, world, depth - 1);
     }

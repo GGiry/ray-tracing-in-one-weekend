@@ -70,6 +70,10 @@ impl Vec3 {
             return result;
         }
     }
+
+    pub fn random_unit_vector() -> Vec3 {
+        return Vec3::random_in_unit_sphere().unit_vector();
+    }
 }
 
 impl Neg for Vec3 {
