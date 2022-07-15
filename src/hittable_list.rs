@@ -1,6 +1,7 @@
 use crate::hittable::{HitRecord, Hittable};
 use crate::Ray;
 
+#[derive(Default)]
 pub struct HittableList {
     objects: Vec<Box<dyn Hittable>>,
 }
@@ -26,8 +27,8 @@ impl Hittable for HittableList {
 
         for object in self.objects.iter() {
             if let Some(hit) = object.hit(ray, t_min, closest_so_far) {
-                hit_anything = Some(hit);
                 closest_so_far = hit.t;
+                hit_anything = Some(hit);
             }
         }
 
@@ -39,7 +40,7 @@ impl Hittable for HittableList {
 mod tests {
     use super::*;
     use crate::sphere::Sphere;
-    use crate::Point3;
+    use crate::{Color, Lambertian, Point3};
 
     #[test]
     fn test_init() {
@@ -51,7 +52,11 @@ mod tests {
     #[test]
     fn test_add() {
         let mut hittables = HittableList::new();
-        let sphere = Box::new(Sphere::new(Point3::new(0.0, 0.0, 0.0), 3.14));
+        let sphere = Box::new(Sphere::new(
+            Point3::new(0.0, 0.0, 0.0),
+            3.14,
+            Lambertian::new(&Color::new(1.0, 0.0, 0.0)),
+        ));
         hittables.add(sphere);
 
         assert_eq!(1, hittables.objects.len());
@@ -60,7 +65,11 @@ mod tests {
     #[test]
     fn test_clear() {
         let mut hittables = HittableList::new();
-        let sphere = Box::new(Sphere::new(Point3::new(0.0, 0.0, 0.0), 3.14));
+        let sphere = Box::new(Sphere::new(
+            Point3::new(0.0, 0.0, 0.0),
+            3.14,
+            Lambertian::new(&Color::new(1.0, 0.0, 0.0)),
+        ));
         hittables.add(sphere);
         hittables.clear();
 

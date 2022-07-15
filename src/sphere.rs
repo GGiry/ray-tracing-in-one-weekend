@@ -1,18 +1,24 @@
 use crate::hittable::{HitRecord, Hittable};
-use crate::{dot, Point3, Ray};
+use crate::material::Material;
+use crate::{dot, Point3, Ray, Vec3};
 
-pub struct Sphere {
+pub struct Sphere<Mat: Material> {
     center: Point3,
     radius: f64,
+    material: Mat,
 }
 
-impl Sphere {
-    pub fn new(center: Point3, radius: f64) -> Sphere {
-        return Sphere { center, radius };
+impl<Mat: Material> Sphere<Mat> {
+    pub fn new(center: Point3, radius: f64, material: Mat) -> Self {
+        return Sphere {
+            center,
+            radius,
+            material,
+        };
     }
 }
 
-impl Hittable for Sphere {
+impl<Mat: Material> Hittable for Sphere<Mat> {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
         let oc = ray.origin() - self.center;
         let a = ray.direction().length_squared();
@@ -23,7 +29,6 @@ impl Hittable for Sphere {
         if discriminant < 0.0 {
             return None;
         }
-
         let sqrt_discriminant = discriminant.sqrt();
 
         let mut root = (-half_b - sqrt_discriminant) / a;
@@ -34,9 +39,14 @@ impl Hittable for Sphere {
             }
         }
 
-        let mut hit = HitRecord::default();
-        hit.t = root;
-        hit.point = ray.at(root);
+        let mut hit = HitRecord {
+            point: ray.at(root),
+            normal: Vec3::default(),
+            t: root,
+            front_face: false,
+            material: &self.material,
+        };
+
         let outward_normal = (hit.point - self.center) / self.radius;
         hit.set_face_normal(ray, &outward_normal);
 
@@ -44,10 +54,60 @@ impl Hittable for Sphere {
     }
 }
 
-impl PartialEq<Self> for Sphere {
+impl<Mat: Material> PartialEq<Self> for Sphere<Mat> {
     fn eq(&self, other: &Self) -> bool {
         return self.center == other.center && self.radius == other.radius;
     }
 }
 
-impl Eq for Sphere {}
+impl<Mat: Material> Eq for Sphere<Mat> {}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{Color, Lambertian};
+
+    #[test]
+    fn new_test() {
+        let lambertian_white = Lambertian::new(&Color::new(1.0, 1.0, 1.0));
+        let sphere = Sphere::new(Point3::default(), 1.0, lambertian_white);
+
+        assert_eq!(sphere.center, Point3::default());
+        assert_eq!(sphere.radius, 1.0);
+        assert_eq!(sphere.material, lambertian_white);
+    }
+
+    #[test]
+    fn test_miss() {
+        let lambertian_white = Lambertian::new(&Color::new(1.0, 1.0, 1.0));
+        let sphere = Sphere::new(Point3::default(), 1.0, lambertian_white);
+
+        let hit_record = sphere.hit(
+            &Ray::new(Point3::new(0.0, 0.0, 2.0), Vec3::new(1.0, 0.0, 0.0)),
+            0.1,
+            f64::INFINITY,
+        );
+
+        assert!(hit_record.is_none());
+    }
+
+    #[test]
+    fn test_hit_simple() {
+        let lambertian_white = Lambertian::new(&Color::new(1.0, 1.0, 1.0));
+        let sphere = Sphere::new(Point3::default(), 1.0, lambertian_white);
+
+        match sphere.hit(
+            &Ray::new(Point3::new(0.0, 0.0, 2.0), Vec3::new(0.0, 0.0, -1.0)),
+            0.1,
+            f64::INFINITY,
+        ) {
+            None => assert!(false),
+            Some(hit_record) => {
+                assert_eq!(1.0, hit_record.t); // Sphere is hit in one "step"
+                assert_eq!(Vec3::new(0.0, 0.0, 1.0), hit_record.normal); // -direction of the ray
+                assert_eq!(Vec3::new(0.0, 0.0, 1.0), hit_record.point); // position of the hit
+                assert_eq!(true, hit_record.front_face); // hit from the exterior
+            }
+        }
+    }
+}

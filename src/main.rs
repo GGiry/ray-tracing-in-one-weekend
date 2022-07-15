@@ -9,6 +9,7 @@ use Vec3 as Point3;
 use crate::camera::Camera;
 use crate::hittable::Hittable;
 use crate::hittable_list::HittableList;
+use crate::lambertian::Lambertian;
 use crate::ray::Ray;
 use crate::sphere::Sphere;
 use crate::utils::{color_to_rbg, random_f64};
@@ -17,6 +18,8 @@ use crate::vec3::{dot, Vec3};
 mod camera;
 mod hittable;
 mod hittable_list;
+mod lambertian;
+mod material;
 mod ray;
 mod sphere;
 mod utils;
@@ -35,9 +38,10 @@ fn ray_color(ray: &Ray, world: &HittableList, depth: u32) -> Color {
     }
 
     if let Some(hit) = world.hit(ray, 0.001, f64::INFINITY) {
-        let target = hit.point + hit.normal + Vec3::random_unit_vector();
-        let rebound = Ray::new(hit.point, target - hit.point);
-        return 0.5 * ray_color(&rebound, world, depth - 1);
+        if let Some((scattered, attenuation)) = hit.material.scatter(&ray, &hit) {
+            return attenuation * ray_color(&scattered, world, depth - 1);
+        }
+        return Color::default();
     }
 
     let unit_direction = ray.direction().unit_vector();
@@ -48,8 +52,18 @@ fn ray_color(ray: &Ray, world: &HittableList, depth: u32) -> Color {
 
 fn scene() -> HittableList {
     let mut world_mut = HittableList::new();
-    world_mut.add(Box::new(Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5)));
-    world_mut.add(Box::new(Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0)));
+    let lambertian_red = Lambertian::new(&Color::new(1.0, 0.0, 0.0));
+    let lambertian_blue = Lambertian::new(&Color::new(0.0, 0.0, 1.0));
+    world_mut.add(Box::new(Sphere::new(
+        Point3::new(0.0, 0.0, -1.0),
+        0.5,
+        lambertian_red,
+    )));
+    world_mut.add(Box::new(Sphere::new(
+        Point3::new(0.0, -100.5, -1.0),
+        100.0,
+        lambertian_blue,
+    )));
     return world_mut;
 }
 
