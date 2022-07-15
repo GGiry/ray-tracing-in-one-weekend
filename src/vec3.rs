@@ -2,18 +2,12 @@ use std::fmt::{Display, Formatter};
 use std::iter::Sum;
 use std::ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Neg, Sub};
 
-use derivative::Derivative;
-
 use crate::utils::{random_f64, random_f64_range};
 
-#[derive(Copy, Clone, Derivative)]
-#[derivative(Debug, Default)]
+#[derive(Copy, Clone, Default, Debug)]
 pub struct Vec3 {
-    #[derivative(Default(value = "0.0"))]
     x: f64,
-    #[derivative(Default(value = "0.0"))]
     y: f64,
-    #[derivative(Default(value = "0.0"))]
     z: f64,
 }
 
