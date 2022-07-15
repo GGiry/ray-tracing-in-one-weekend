@@ -69,4 +69,11 @@ mod tests {
             assert!(10.0 >= random);
         }
     }
+
+    #[test]
+    fn channel_to_rgb_test() {
+        assert_eq!(255, channel_to_rgb(1.0, 1.0));
+        assert_eq!(0, channel_to_rgb(0.0, 1.0));
+        assert_eq!(181, channel_to_rgb(0.5, 1.0)); // With gamma correction of 2: 0.5^1/2 ~= 0.71, 0.71 * 256 ~= 181
+    }
 }
