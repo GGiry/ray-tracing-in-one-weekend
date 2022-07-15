@@ -10,6 +10,7 @@ use crate::camera::Camera;
 use crate::hittable::Hittable;
 use crate::hittable_list::HittableList;
 use crate::lambertian::Lambertian;
+use crate::metal::Metal;
 use crate::ray::Ray;
 use crate::sphere::Sphere;
 use crate::utils::{color_to_rbg, random_f64};
@@ -20,6 +21,7 @@ mod hittable;
 mod hittable_list;
 mod lambertian;
 mod material;
+mod metal;
 mod ray;
 mod sphere;
 mod utils;
@@ -52,18 +54,33 @@ fn ray_color(ray: &Ray, world: &HittableList, depth: u32) -> Color {
 
 fn scene() -> HittableList {
     let mut world_mut = HittableList::new();
-    let lambertian_red = Lambertian::new(&Color::new(1.0, 0.0, 0.0));
-    let lambertian_blue = Lambertian::new(&Color::new(0.0, 0.0, 1.0));
-    world_mut.add(Box::new(Sphere::new(
-        Point3::new(0.0, 0.0, -1.0),
-        0.5,
-        lambertian_red,
-    )));
+
+    let ground = Lambertian::new(&Color::new(0.8, 0.8, 0.0));
+    let center = Lambertian::new(&Color::new(0.7, 0.3, 0.3));
+    let left = Metal::new(&Color::new(0.8, 0.8, 0.8));
+    let right = Metal::new(&Color::new(0.8, 0.6, 0.2));
+
     world_mut.add(Box::new(Sphere::new(
         Point3::new(0.0, -100.5, -1.0),
         100.0,
-        lambertian_blue,
+        ground,
     )));
+    world_mut.add(Box::new(Sphere::new(
+        Point3::new(0.0, 0.0, -1.0),
+        0.5,
+        center,
+    )));
+    world_mut.add(Box::new(Sphere::new(
+        Point3::new(-1.0, 0.0, -1.0),
+        0.5,
+        left,
+    )));
+    world_mut.add(Box::new(Sphere::new(
+        Point3::new(1.0, 0.0, -1.0),
+        0.5,
+        right,
+    )));
+
     return world_mut;
 }
 

@@ -75,6 +75,10 @@ impl Vec3 {
         let delta = 1e-8;
         return self.x.abs() < delta && self.y.abs() < delta && self.z.abs() < delta;
     }
+
+    pub fn reflect(&self, normal: &Vec3) -> Vec3 {
+        return *self - 2.0 * dot(self, normal) * *normal;
+    }
 }
 
 impl Neg for Vec3 {
@@ -650,5 +654,28 @@ mod tests {
             .sum();
 
         assert_eq!(sum, Vec3::new(3.0, 6.0, 9.0));
+    }
+
+    #[test]
+    fn test_reflect() {
+        let vec = Vec3 {
+            x: 1.0,
+            y: -1.0,
+            z: 0.0,
+        };
+
+        let normal = Vec3 {
+            x: 1.0,
+            y: 0.0,
+            z: 0.0,
+        };
+
+        let expected = Vec3 {
+            x: -1.0,
+            y: -1.0,
+            z: 0.0,
+        };
+
+        assert_eq!(expected, vec.reflect(&normal));
     }
 }
