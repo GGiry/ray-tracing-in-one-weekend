@@ -69,6 +69,12 @@ impl Vec3 {
     pub fn random_unit_vector() -> Vec3 {
         return Vec3::random_in_unit_sphere().unit_vector();
     }
+
+    // Return true if the vector is close to zero in all dimensions.
+    pub fn near_zero(&self) -> bool {
+        let delta = 1e-8;
+        return self.x.abs() < delta && self.y.abs() < delta && self.z.abs() < delta;
+    }
 }
 
 impl Neg for Vec3 {
@@ -626,6 +632,23 @@ mod tests {
             z: 3.0,
         };
 
-        assert!(vec_a == vec_b);
+        assert_eq!(vec_a, vec_b);
+    }
+
+    #[test]
+    fn test_near_zero() {
+        assert!(Vec3::default().near_zero());
+        assert!(Vec3::new(0.000000001, 0.0, 0.0).near_zero());
+        assert!(!Vec3::new(1.0, 1.0, 1.0).near_zero());
+        assert!(!Vec3::new(0.00000001, 0.0, 0.0).near_zero());
+    }
+
+    #[test]
+    fn test_sum() {
+        let sum: Vec3 = (0..3)
+            .map(|index| Vec3::new(index as f64, 2.0 * index as f64, 3.0 * index as f64))
+            .sum();
+
+        assert_eq!(sum, Vec3::new(3.0, 6.0, 9.0));
     }
 }
