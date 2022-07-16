@@ -57,8 +57,8 @@ fn scene() -> HittableList {
 
     let ground = Lambertian::new(&Color::new(0.8, 0.8, 0.0));
     let center = Lambertian::new(&Color::new(0.7, 0.3, 0.3));
-    let left = Metal::new(&Color::new(0.8, 0.8, 0.8));
-    let right = Metal::new(&Color::new(0.8, 0.6, 0.2));
+    let left = Metal::new(&Color::new(0.8, 0.8, 0.8), 0.3);
+    let right = Metal::new(&Color::new(0.8, 0.6, 0.2), 1.0);
 
     world_mut.add(Box::new(Sphere::new(
         Point3::new(0.0, -100.5, -1.0),
@@ -89,8 +89,8 @@ fn main() {
     let aspect_ratio = 16.0 / 9.0;
     let image_width: u32 = 400;
     let image_height = (image_width as f64 / aspect_ratio) as u32;
-    let samples_per_pixel = 100;
-    let max_depth = 50;
+    let samples_per_pixel = 200;
+    let max_depth = 200;
 
     // World
     let world = scene();
