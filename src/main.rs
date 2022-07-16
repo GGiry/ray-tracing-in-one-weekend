@@ -7,6 +7,7 @@ use Vec3 as Color;
 use Vec3 as Point3;
 
 use crate::camera::Camera;
+use crate::dielectric::Dielectric;
 use crate::hittable::Hittable;
 use crate::hittable_list::HittableList;
 use crate::lambertian::Lambertian;
@@ -17,6 +18,7 @@ use crate::utils::{color_to_rbg, random_f64};
 use crate::vec3::{dot, Vec3};
 
 mod camera;
+mod dielectric;
 mod hittable;
 mod hittable_list;
 mod lambertian;
@@ -56,8 +58,8 @@ fn scene() -> HittableList {
     let mut world_mut = HittableList::new();
 
     let ground = Lambertian::new(&Color::new(0.8, 0.8, 0.0));
-    let center = Lambertian::new(&Color::new(0.7, 0.3, 0.3));
-    let left = Metal::new(&Color::new(0.8, 0.8, 0.8), 0.3);
+    let center = Lambertian::new(&Color::new(0.1, 0.2, 0.5));
+    let left = Dielectric::new(1.5);
     let right = Metal::new(&Color::new(0.8, 0.6, 0.2), 1.0);
 
     world_mut.add(Box::new(Sphere::new(
@@ -76,6 +78,11 @@ fn scene() -> HittableList {
         left,
     )));
     world_mut.add(Box::new(Sphere::new(
+        Point3::new(-1.0, 0.0, -1.0),
+        -0.4,
+        left,
+    )));
+    world_mut.add(Box::new(Sphere::new(
         Point3::new(1.0, 0.0, -1.0),
         0.5,
         right,
@@ -89,8 +96,8 @@ fn main() {
     let aspect_ratio = 16.0 / 9.0;
     let image_width: u32 = 400;
     let image_height = (image_width as f64 / aspect_ratio) as u32;
-    let samples_per_pixel = 200;
-    let max_depth = 200;
+    let samples_per_pixel = 1000;
+    let max_depth = 1000;
 
     // World
     let world = scene();
