@@ -1,3 +1,4 @@
+use std::f64::consts::PI;
 use std::fs::File;
 use std::io::Write;
 
@@ -93,17 +94,34 @@ fn scene() -> HittableList {
 
 fn main() {
     // Image
+    let vertical_field_of_view = 90.0;
     let aspect_ratio = 16.0 / 9.0;
     let image_width: u32 = 400;
     let image_height = (image_width as f64 / aspect_ratio) as u32;
-    let samples_per_pixel = 1000;
-    let max_depth = 1000;
+    let samples_per_pixel = 100;
+    let max_depth = 50;
 
     // World
-    let world = scene();
+    //let world = scene();
+    let R = PI.cos();
+    let mut world = HittableList::new();
+    let material_left = Lambertian::new(&Color::new(0.0, 0.0, 1.0));
+    let material_right = Lambertian::new(&Color::new(1.0, 0.0, 0.0));
+
+    world.add(Box::new(Sphere::new(
+        Point3::new(-R, 0.0, -1.0),
+        R,
+        material_left,
+    )));
+
+    world.add(Box::new(Sphere::new(
+        Point3::new(R, 0.0, -1.0),
+        R,
+        material_right,
+    )));
 
     // Camera
-    let camera = Camera::new();
+    let camera = Camera::new(vertical_field_of_view, aspect_ratio);
 
     // Render
     let image = (0..image_height)

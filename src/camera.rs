@@ -9,9 +9,10 @@ pub struct Camera {
 }
 
 impl Camera {
-    pub fn new() -> Self {
-        let aspect_ratio = 16.0 / 9.0;
-        let viewport_height = 2.0;
+    pub fn new(vertical_field_of_view: f64, aspect_ratio: f64) -> Self {
+        let theta = vertical_field_of_view.to_radians();
+        let h = (theta / 2.0).tan();
+        let viewport_height = 2.0 * h;
         let viewport_width = aspect_ratio * viewport_height;
         let focal_length = 1.0;
 
@@ -44,11 +45,12 @@ mod tests {
 
     #[test]
     fn init() {
-        let camera = Camera::new();
+        let aspect_ratio = 16.0 / 9.0;
+        let camera = Camera::new(90.0, aspect_ratio);
 
         let expected_origin = Point3::default();
-        let expected_llc = Point3::new(-16.0 / 9.0, -1.0, -1.0);
-        let expected_horizontal = Vec3::new(16.0 / 9.0 * 2.0, 0.0, 0.0);
+        let expected_llc = Point3::new(-aspect_ratio, -1.0, -1.0);
+        let expected_horizontal = Vec3::new(aspect_ratio * 2.0, 0.0, 0.0);
         let expected_vertical = Vec3::new(0.0, 2.0, 0.0);
 
         assert_eq!(expected_origin, camera.origin);
@@ -59,8 +61,9 @@ mod tests {
 
     #[test]
     fn get_ray() {
-        let camera = Camera::new();
-        let expected_ray = Ray::new(Point3::default(), Vec3::new(-16.0 / 9.0, -1.0, -1.0));
+        let aspect_ratio = 16.0 / 9.0;
+        let camera = Camera::new(90.0, aspect_ratio);
+        let expected_ray = Ray::new(Point3::default(), Vec3::new(-aspect_ratio, -1.0, -1.0));
         assert_eq!(expected_ray, camera.get_ray(0.0, 0.0));
     }
 }
