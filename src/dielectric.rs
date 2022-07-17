@@ -1,6 +1,6 @@
 use crate::hittable::HitRecord;
 use crate::material::Material;
-use crate::{dot, random_f64, Color, Ray, Vec3};
+use crate::{dot, random_f64, Color, Ray};
 
 #[derive(Debug, Copy, Clone)]
 pub struct Dielectric {
