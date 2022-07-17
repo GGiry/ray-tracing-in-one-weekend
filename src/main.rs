@@ -104,12 +104,19 @@ fn main() {
     let world = scene();
 
     // Camera
+    let look_from = Point3::new(13.0, 2.0, 3.0);
+    let look_at = Point3::new(0.0, 0.0, 0.0);
+    let view_up = Vec3::new(0.0, 1.0, 0.0);
+    let aperture = 0.1;
+    let dist_to_focus = 10.0;
     let camera = Camera::new(
-        &Point3::new(-2.0, 2.0, 1.0),
-        &Point3::new(0.0, 0.0, -1.0),
-        &Vec3::new(0.0, 1.0, 0.0),
+        &look_from,
+        &look_at,
+        &view_up,
         vertical_field_of_view,
         aspect_ratio,
+        aperture,
+        dist_to_focus,
     );
 
     // Render
