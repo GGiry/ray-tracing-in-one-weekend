@@ -14,7 +14,7 @@ use crate::lambertian::Lambertian;
 use crate::metal::Metal;
 use crate::ray::Ray;
 use crate::sphere::Sphere;
-use crate::utils::{color_to_rbg, random_f64};
+use crate::utils::{color_to_rbg, random_f64, random_f64_range};
 use crate::vec3::{dot, Vec3};
 
 mod camera;
@@ -91,17 +91,75 @@ fn scene() -> HittableList {
     return world_mut;
 }
 
+fn random_scene() -> HittableList {
+    let mut world = HittableList::new();
+
+    let ground_material = Lambertian::new(&Color::new(0.5, 0.5, 0.5));
+    world.add(Box::new(Sphere::new(
+        Point3::new(0.0, -1000.0, 0.0),
+        1000.0,
+        ground_material,
+    )));
+
+    for a in -11..11 {
+        for b in -11..11 {
+            let center = Point3::new(
+                a as f64 + 0.9 * random_f64(),
+                0.2,
+                b as f64 + 0.9 * random_f64(),
+            );
+
+            let random = random_f64();
+            if random < 0.8 {
+                // diffuse
+                let albedo = Color::random() * Color::random();
+                world.add(Box::new(Sphere::new(center, 0.2, Lambertian::new(&albedo))));
+            } else if random < 0.95 {
+                // metal
+                world.add(Box::new(Sphere::new(
+                    center,
+                    0.2,
+                    Metal::new(&Color::random(), random_f64_range(0.0, 0.5)),
+                )));
+            } else {
+                // glass
+                world.add(Box::new(Sphere::new(center, 0.2, Dielectric::new(1.5))));
+            }
+        }
+    }
+
+    world.add(Box::new(Sphere::new(
+        Point3::new(0.0, 1.0, 0.0),
+        1.0,
+        Dielectric::new(1.5),
+    )));
+
+    world.add(Box::new(Sphere::new(
+        Point3::new(-4.0, 1.0, 0.0),
+        1.0,
+        Lambertian::new(&Color::new(0.4, 0.2, 0.1)),
+    )));
+
+    world.add(Box::new(Sphere::new(
+        Point3::new(4.0, 1.0, 0.0),
+        1.0,
+        Metal::new(&Color::new(0.7, 0.6, 0.5), 0.0),
+    )));
+
+    return world;
+}
+
 fn main() {
     // Image
     let vertical_field_of_view = 20.0;
-    let aspect_ratio = 16.0 / 9.0;
-    let image_width: u32 = 400;
+    let aspect_ratio = 3.0 / 2.0;
+    let image_width: u32 = 1200;
     let image_height = (image_width as f64 / aspect_ratio) as u32;
-    let samples_per_pixel = 1000;
-    let max_depth = 500;
+    let samples_per_pixel = 500;
+    let max_depth = 50;
 
     // World
-    let world = scene();
+    let world = random_scene();
 
     // Camera
     let look_from = Point3::new(13.0, 2.0, 3.0);
@@ -124,7 +182,7 @@ fn main() {
         .into_par_iter()
         .rev()
         .flat_map(|index_height| {
-            eprintln!("Scanlines remaining: {index_height}");
+            eprintln!("Lines remaining: {index_height}");
             (0..image_width)
                 .flat_map(|index_width| {
                     let pixel_color: Vec3 = (0..samples_per_pixel)
