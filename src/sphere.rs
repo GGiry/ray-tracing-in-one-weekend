@@ -10,11 +10,11 @@ pub struct Sphere<Mat: Material> {
 
 impl<Mat: Material> Sphere<Mat> {
     pub fn new(center: Point3, radius: f64, material: Mat) -> Self {
-        return Sphere {
+        Sphere {
             center,
             radius,
             material,
-        };
+        }
     }
 }
 
@@ -50,13 +50,13 @@ impl<Mat: Material> Hittable for Sphere<Mat> {
         let outward_normal = (hit.point - self.center) / self.radius;
         hit.set_face_normal(ray, &outward_normal);
 
-        return Some(hit);
+        Some(hit)
     }
 }
 
 impl<Mat: Material> PartialEq<Self> for Sphere<Mat> {
     fn eq(&self, other: &Self) -> bool {
-        return self.center == other.center && self.radius == other.radius;
+        self.center == other.center && self.radius == other.radius
     }
 }
 

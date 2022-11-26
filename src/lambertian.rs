@@ -9,7 +9,7 @@ pub struct Lambertian {
 
 impl Lambertian {
     pub fn new(color: &Color) -> Lambertian {
-        return Lambertian { albedo: *color };
+        Lambertian { albedo: *color }
     }
 }
 
@@ -22,13 +22,13 @@ impl Material for Lambertian {
         }
 
         let result = Ray::new(hit_record.point, scatter_direction);
-        return Some((result, self.albedo));
+        Some((result, self.albedo))
     }
 }
 
 impl PartialEq for Lambertian {
     fn eq(&self, other: &Self) -> bool {
-        return self.albedo == other.albedo;
+        self.albedo == other.albedo
     }
 }
 

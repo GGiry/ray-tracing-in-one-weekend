@@ -30,10 +30,10 @@ mod utils;
 mod vec3;
 
 fn linear_blend(t: f64, start: Color, end: Color) -> Color {
-    return (1.0 - t) * start + t * end;
+    (1.0 - t) * start + t * end
 }
 
-fn ray_color(ray: &Ray, world: &HittableList, depth: u32) -> Color {
+fn ray_color(ray: &Ray, world: &HittableList, depth: i32) -> Color {
     let white = Color::new(1.0, 1.0, 1.0);
     let light_blue = Color::new(0.5, 0.7, 1.0);
 
@@ -42,7 +42,7 @@ fn ray_color(ray: &Ray, world: &HittableList, depth: u32) -> Color {
     }
 
     if let Some(hit) = world.hit(ray, 0.001, f64::INFINITY) {
-        if let Some((scattered, attenuation)) = hit.material.scatter(&ray, &hit) {
+        if let Some((scattered, attenuation)) = hit.material.scatter(ray, &hit) {
             return attenuation * ray_color(&scattered, world, depth - 1);
         }
         return Color::default();
@@ -51,9 +51,10 @@ fn ray_color(ray: &Ray, world: &HittableList, depth: u32) -> Color {
     let unit_direction = ray.direction().unit_vector();
     let t = 0.5 * (unit_direction.y() + 1.0);
 
-    return linear_blend(t, white, light_blue);
+    linear_blend(t, white, light_blue)
 }
 
+#[allow(dead_code)]
 fn scene() -> HittableList {
     let mut world_mut = HittableList::new();
 
@@ -88,7 +89,7 @@ fn scene() -> HittableList {
         right,
     )));
 
-    return world_mut;
+    world_mut
 }
 
 fn random_scene() -> HittableList {
@@ -146,7 +147,7 @@ fn random_scene() -> HittableList {
         Metal::new(&Color::new(0.7, 0.6, 0.5), 0.0),
     )));
 
-    return world;
+    world
 }
 
 fn main() {
@@ -192,11 +193,11 @@ fn main() {
                             let v =
                                 (index_height as f64 + random_f64()) / ((image_height - 1) as f64);
                             let ray = camera.get_ray(u, v);
-                            return ray_color(&ray, &world, max_depth);
+                            ray_color(&ray, &world, max_depth)
                         })
                         .sum();
 
-                    return color_to_rbg(pixel_color, samples_per_pixel);
+                    color_to_rbg(pixel_color, samples_per_pixel)
                 })
                 .collect::<Vec<u8>>()
         })

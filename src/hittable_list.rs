@@ -8,13 +8,14 @@ pub struct HittableList {
 
 impl HittableList {
     pub fn new() -> Self {
-        return HittableList { objects: vec![] };
+        HittableList { objects: vec![] }
     }
 
     pub fn add(&mut self, object: Box<dyn Hittable>) {
         self.objects.push(object);
     }
 
+    #[allow(dead_code)]
     pub fn clear(&mut self) {
         self.objects.clear();
     }
@@ -32,7 +33,7 @@ impl Hittable for HittableList {
             }
         }
 
-        return hit_anything;
+        hit_anything
     }
 }
 

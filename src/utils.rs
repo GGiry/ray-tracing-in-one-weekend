@@ -13,32 +13,32 @@ pub fn clamp(x: f64, min: f64, max: f64) -> f64 {
         return max;
     }
 
-    return x;
+    x
 }
 
 pub fn channel_to_rgb(pixel: f64, scale: f64) -> u8 {
     // Gamma correction is color ^ 1 / gamma value. Here we gamma correct of 2.
     let gamma_corrected = (pixel * scale).sqrt();
-    return (256.0 * clamp(gamma_corrected, 0.0, 0.999)) as u8;
+    (256.0 * clamp(gamma_corrected, 0.0, 0.999)) as u8
 }
 
 pub fn color_to_rbg(pixel: Color, samples_per_pixel: u32) -> Vec<u8> {
     let scale = 1.0 / (samples_per_pixel as f64);
-    let mut result = Vec::new();
+    let result = vec![
+        channel_to_rgb(pixel.x(), scale),
+        channel_to_rgb(pixel.y(), scale),
+        channel_to_rgb(pixel.z(), scale),
+    ];
 
-    result.push(channel_to_rgb(pixel.x(), scale));
-    result.push(channel_to_rgb(pixel.y(), scale));
-    result.push(channel_to_rgb(pixel.z(), scale));
-
-    return result;
+    result
 }
 
 pub fn random_f64() -> f64 {
-    return rand::thread_rng().gen();
+    rand::thread_rng().gen()
 }
 
 pub fn random_f64_range(min: f64, max: f64) -> f64 {
-    return rand::thread_rng().gen_range(min..max);
+    rand::thread_rng().gen_range(min..max)
 }
 
 #[cfg(test)]

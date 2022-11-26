@@ -9,16 +9,16 @@ pub struct Dielectric {
 
 impl Dielectric {
     pub fn new(index_of_refraction: f64) -> Self {
-        return Self {
+        Self {
             index_of_refraction,
-        };
+        }
     }
 
     fn reflectance(cosine: f64, index_of_refraction: f64) -> f64 {
         // Use Schlick's approximation for reflectance.
         let mut r0 = (1.0 - index_of_refraction) / (1.0 + index_of_refraction);
         r0 = r0 * r0;
-        return r0 + (1.0 - r0) * (1.0 - cosine).powi(5);
+        r0 + (1.0 - r0) * (1.0 - cosine).powi(5)
     }
 }
 
@@ -43,9 +43,9 @@ impl Material for Dielectric {
             unit_direction.refract(&hit_record.normal, refraction_ratio)
         };
 
-        return Some((
+        Some((
             Ray::new(hit_record.point, direction),
             Color::new(1.0, 1.0, 1.0),
-        ));
+        ))
     }
 }

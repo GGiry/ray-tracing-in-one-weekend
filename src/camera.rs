@@ -46,16 +46,16 @@ impl Camera {
         result.lower_left_corner =
             result.origin - result.horizontal / 2.0 - result.vertical / 2.0 - focus_distance * w;
 
-        return result;
+        result
     }
 
     pub fn get_ray(&self, u: f64, v: f64) -> Ray {
         let random_vector = self.lens_radius * Vec3::random_in_unit_sphere();
         let offset = self.u * random_vector.x() + self.v * random_vector.y();
-        return Ray::new(
+        Ray::new(
             self.origin + offset,
             self.lower_left_corner + u * self.horizontal + v * self.vertical - self.origin - offset,
-        );
+        )
     }
 }
 

@@ -10,10 +10,10 @@ pub struct Metal {
 
 impl Metal {
     pub fn new(color: &Color, fuzziness: f64) -> Metal {
-        return Metal {
+        Metal {
             albedo: *color,
             fuzziness,
-        };
+        }
     }
 }
 
@@ -24,6 +24,6 @@ impl Material for Metal {
             hit_record.point,
             reflected + self.fuzziness * Vec3::random_in_unit_sphere(),
         );
-        return Some((result, self.albedo));
+        Some((result, self.albedo))
     }
 }

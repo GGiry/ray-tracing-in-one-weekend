@@ -10,25 +10,25 @@ pub struct Ray {
 
 impl Ray {
     pub fn new(origin: Point3, direction: Vec3) -> Ray {
-        return Ray { origin, direction };
+        Ray { origin, direction }
     }
 
     pub fn origin(&self) -> Point3 {
-        return self.origin;
+        self.origin
     }
 
     pub fn direction(&self) -> Vec3 {
-        return self.direction;
+        self.direction
     }
 
     pub fn at(&self, t: f64) -> Point3 {
-        return self.origin + t * self.direction;
+        self.origin + t * self.direction
     }
 }
 
 impl PartialEq for Ray {
     fn eq(&self, other: &Self) -> bool {
-        return self.origin == other.origin && self.direction == other.direction;
+        self.origin == other.origin && self.direction == other.direction
     }
 }
 

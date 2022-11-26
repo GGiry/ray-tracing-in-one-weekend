@@ -13,47 +13,47 @@ pub struct Vec3 {
 
 impl Vec3 {
     pub fn new(x: f64, y: f64, z: f64) -> Vec3 {
-        return Vec3 { x, y, z };
+        Vec3 { x, y, z }
     }
 
     pub fn x(&self) -> f64 {
-        return self.x;
+        self.x
     }
 
     pub fn y(&self) -> f64 {
-        return self.y;
+        self.y
     }
 
     pub fn z(&self) -> f64 {
-        return self.z;
+        self.z
     }
 
     pub fn length_squared(&self) -> f64 {
-        return self.x * self.x + self.y * self.y + self.z * self.z;
+        self.x * self.x + self.y * self.y + self.z * self.z
     }
 
     pub fn length(&self) -> f64 {
-        return self.length_squared().sqrt();
+        self.length_squared().sqrt()
     }
 
     pub fn unit_vector(&self) -> Vec3 {
-        return *self / self.length();
+        *self / self.length()
     }
 
     pub fn random() -> Vec3 {
-        return Vec3 {
+        Vec3 {
             x: random_f64(),
             y: random_f64(),
             z: random_f64(),
-        };
+        }
     }
 
     pub fn random_range(min: f64, max: f64) -> Vec3 {
-        return Vec3 {
+        Vec3 {
             x: random_f64_range(min, max),
             y: random_f64_range(min, max),
             z: random_f64_range(min, max),
-        };
+        }
     }
 
     pub fn random_in_unit_sphere() -> Vec3 {
@@ -67,24 +67,24 @@ impl Vec3 {
     }
 
     pub fn random_unit_vector() -> Vec3 {
-        return Vec3::random_in_unit_sphere().unit_vector();
+        Vec3::random_in_unit_sphere().unit_vector()
     }
 
     // Return true if the vector is close to zero in all dimensions.
     pub fn near_zero(&self) -> bool {
         let delta = 1e-8;
-        return self.x.abs() < delta && self.y.abs() < delta && self.z.abs() < delta;
+        self.x.abs() < delta && self.y.abs() < delta && self.z.abs() < delta
     }
 
     pub fn reflect(&self, normal: &Vec3) -> Vec3 {
-        return *self - 2.0 * dot(self, normal) * *normal;
+        *self - 2.0 * dot(self, normal) * *normal
     }
 
     pub fn refract(&self, normal: &Vec3, etai_over_etat: f64) -> Vec3 {
         let cos_theta = dot(&(-(*self)), normal).min(1.0);
         let r_out_perp = etai_over_etat * (*self + cos_theta * *normal);
         let r_out_parallel = -((1.0 - r_out_perp.length_squared()).abs()).sqrt() * *normal;
-        return r_out_perp + r_out_parallel;
+        r_out_perp + r_out_parallel
     }
 }
 
@@ -139,11 +139,11 @@ impl Add for Vec3 {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self::Output {
-        return Self {
+        Self {
             x: self.x + rhs.x,
             y: self.y + rhs.y,
             z: self.z + rhs.z,
-        };
+        }
     }
 }
 
@@ -151,11 +151,11 @@ impl Sub for Vec3 {
     type Output = Self;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        return Self {
+        Self {
             x: self.x - rhs.x,
             y: self.y - rhs.y,
             z: self.z - rhs.z,
-        };
+        }
     }
 }
 
@@ -163,11 +163,11 @@ impl Mul for Vec3 {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self::Output {
-        return Self {
+        Self {
             x: self.x * rhs.x,
             y: self.y * rhs.y,
             z: self.z * rhs.z,
-        };
+        }
     }
 }
 
@@ -175,11 +175,11 @@ impl Mul<Vec3> for f64 {
     type Output = Vec3;
 
     fn mul(self, rhs: Vec3) -> Self::Output {
-        return Vec3 {
+        Vec3 {
             x: self * rhs.x,
             y: self * rhs.y,
             z: self * rhs.z,
-        };
+        }
     }
 }
 
@@ -187,7 +187,7 @@ impl Mul<f64> for Vec3 {
     type Output = Self;
 
     fn mul(self, rhs: f64) -> Self::Output {
-        return rhs * self;
+        rhs * self
     }
 }
 
@@ -195,7 +195,7 @@ impl Div<f64> for Vec3 {
     type Output = Self;
 
     fn div(self, rhs: f64) -> Self::Output {
-        return (1.0 / rhs) * self;
+        (1.0 / rhs) * self
     }
 }
 
@@ -207,7 +207,7 @@ impl Display for Vec3 {
 
 impl PartialEq<Self> for Vec3 {
     fn eq(&self, other: &Self) -> bool {
-        return self.x == other.x && self.y == other.y && self.z == other.z;
+        self.x == other.x && self.y == other.y && self.z == other.z
     }
 }
 
@@ -219,20 +219,20 @@ impl Sum<Vec3> for Vec3 {
         for vec in iter {
             result += vec;
         }
-        return result;
+        result
     }
 }
 
 pub fn dot(lhs: &Vec3, rhs: &Vec3) -> f64 {
-    return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
+    lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z
 }
 
 pub fn cross(lhs: &Vec3, rhs: &Vec3) -> Vec3 {
-    return Vec3 {
+    Vec3 {
         x: lhs.y * rhs.z - lhs.z * rhs.y,
         y: lhs.z * rhs.x - lhs.x * rhs.z,
         z: lhs.x * rhs.y - lhs.y * rhs.x,
-    };
+    }
 }
 
 #[cfg(test)]
