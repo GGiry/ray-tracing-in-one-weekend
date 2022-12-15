@@ -1,3 +1,4 @@
+use crate::utils::random_f64_range;
 use crate::vec3::cross;
 use crate::{Point3, Ray, Vec3};
 
@@ -11,6 +12,8 @@ pub struct Camera {
     pub v: Vec3,
     pub w: Vec3,
     pub lens_radius: f64,
+    pub shutter_open_time: f64,
+    pub shutter_close_time: f64,
 }
 
 impl Camera {
@@ -22,6 +25,8 @@ impl Camera {
         aspect_ratio: f64,
         aperture: f64,
         focus_distance: f64,
+        shutter_open_time: f64,
+        shutter_close_time: f64,
     ) -> Self {
         let theta = vertical_field_of_view.to_radians();
         let h = (theta / 2.0).tan();
@@ -41,6 +46,8 @@ impl Camera {
             w,
             lower_left_corner: Vec3::default(),
             lens_radius: aperture / 2.0,
+            shutter_open_time,
+            shutter_close_time,
         };
 
         result.lower_left_corner =
@@ -55,6 +62,7 @@ impl Camera {
         Ray::new(
             self.origin + offset,
             self.lower_left_corner + u * self.horizontal + v * self.vertical - self.origin - offset,
+            random_f64_range(self.shutter_open_time, self.shutter_close_time),
         )
     }
 }
@@ -74,6 +82,8 @@ mod tests {
             aspect_ratio,
             2.0,
             1.0,
+            0.0,
+            0.0,
         );
 
         let expected_origin = Point3::default();
@@ -98,8 +108,10 @@ mod tests {
             aspect_ratio,
             2.0,
             1.0,
+            0.0,
+            0.0,
         );
-        let expected_ray = Ray::new(Point3::default(), Vec3::new(-aspect_ratio, -1.0, -1.0));
+        let expected_ray = Ray::new_old(Point3::default(), Vec3::new(-aspect_ratio, -1.0, -1.0));
         assert_eq!(expected_ray, camera.get_ray(0.0, 0.0));
     }
 }

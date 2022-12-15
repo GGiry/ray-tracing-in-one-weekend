@@ -83,7 +83,7 @@ mod tests {
         let sphere = Sphere::new(Point3::default(), 1.0, lambertian_white);
 
         let hit_record = sphere.hit(
-            &Ray::new(Point3::new(0.0, 0.0, 2.0), Vec3::new(1.0, 0.0, 0.0)),
+            &Ray::new_old(Point3::new(0.0, 0.0, 2.0), Vec3::new(1.0, 0.0, 0.0)),
             0.1,
             f64::INFINITY,
         );
@@ -97,7 +97,7 @@ mod tests {
         let sphere = Sphere::new(Point3::default(), 1.0, lambertian_white);
 
         match sphere.hit(
-            &Ray::new(Point3::new(0.0, 0.0, 2.0), Vec3::new(0.0, 0.0, -1.0)),
+            &Ray::new_old(Point3::new(0.0, 0.0, 2.0), Vec3::new(0.0, 0.0, -1.0)),
             0.1,
             f64::INFINITY,
         ) {

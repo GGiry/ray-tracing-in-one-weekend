@@ -23,6 +23,7 @@ impl Material for Metal {
         let result = Ray::new(
             hit_record.point,
             reflected + self.fuzziness * Vec3::random_in_unit_sphere(),
+            ray.time(),
         );
         Some((result, self.albedo))
     }

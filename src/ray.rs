@@ -6,11 +6,16 @@ use Vec3 as Point3;
 pub struct Ray {
     origin: Point3,
     direction: Vec3,
+    time: f64,
 }
 
 impl Ray {
-    pub fn new(origin: Point3, direction: Vec3) -> Ray {
-        Ray { origin, direction }
+    pub fn new(origin: Point3, direction: Vec3, time: f64) -> Ray {
+        Ray {
+            origin,
+            direction,
+            time,
+        }
     }
 
     pub fn origin(&self) -> Point3 {
@@ -19,6 +24,10 @@ impl Ray {
 
     pub fn direction(&self) -> Vec3 {
         self.direction
+    }
+
+    pub fn time(&self) -> f64 {
+        self.time
     }
 
     pub fn at(&self, t: f64) -> Point3 {
@@ -43,7 +52,7 @@ mod tests {
         let origin = Point3::new(1.0, 2.0, 3.0);
         let direction = Vec3::new(4.0, 5.0, 6.0);
 
-        let ray = Ray::new(origin, direction);
+        let ray = Ray::new(origin, direction, 0.0);
 
         assert_eq!(1.0, ray.origin().x());
         assert_eq!(2.0, ray.origin().y());
@@ -62,7 +71,7 @@ mod tests {
         let expected_at1 = Point3::new(1.0 + 4.0, 2.0 + 5.0, 3.0 + 6.0);
         let expected_at2 = Point3::new(1.0 + 8.0, 2.0 + 10.0, 3.0 + 12.0);
 
-        let ray = Ray::new(origin, direction);
+        let ray = Ray::new(origin, direction, 0.0);
 
         let at0 = ray.at(0.0);
         let at1 = ray.at(1.0);

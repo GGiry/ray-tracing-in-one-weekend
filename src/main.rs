@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::io::Write;
 
+use moving_sphere::MovingSphere;
 use rayon::prelude::*;
 
 use Vec3 as Color;
@@ -24,6 +25,7 @@ mod hittable_list;
 mod lambertian;
 mod material;
 mod metal;
+mod moving_sphere;
 mod ray;
 mod sphere;
 mod utils;
@@ -114,7 +116,15 @@ fn random_scene() -> HittableList {
             if random < 0.8 {
                 // diffuse
                 let albedo = Color::random() * Color::random();
-                world.add(Box::new(Sphere::new(center, 0.2, Lambertian::new(&albedo))));
+                let center2 = center + Vec3::new(0.0, random_f64_range(0.0, 0.5), 0.0);
+                world.add(Box::new(MovingSphere::new(
+                    center,
+                    center2,
+                    0.0,
+                    1.0,
+                    0.2,
+                    Lambertian::new(&albedo),
+                )));
             } else if random < 0.95 {
                 // metal
                 world.add(Box::new(Sphere::new(
@@ -153,10 +163,10 @@ fn random_scene() -> HittableList {
 fn main() {
     // Image
     let vertical_field_of_view = 20.0;
-    let aspect_ratio = 3.0 / 2.0;
-    let image_width: u32 = 1200;
+    let aspect_ratio = 16.0 / 9.0;
+    let image_width: u32 = 400;
     let image_height = (image_width as f64 / aspect_ratio) as u32;
-    let samples_per_pixel = 500;
+    let samples_per_pixel = 100;
     let max_depth = 50;
 
     // World
@@ -176,6 +186,8 @@ fn main() {
         aspect_ratio,
         aperture,
         dist_to_focus,
+        0.0,
+        1.0,
     );
 
     // Render
